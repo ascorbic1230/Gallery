@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/photos_tab"
+        android:enabled="true"
+        android:icon="@drawable/ic_photos_tab"
+        android:title="@string/photos" />
+
+    <item
+        android:id="@+id/folders_tab"
+        android:enabled="true"
+        android:icon="@drawable/ic_folders_tab"
+        android:title="@string/folders" />
+</menu>

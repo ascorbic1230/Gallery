@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="@string/select_items"
+        android:id="@+id/selectItems_option"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/new_folder"
+        android:id="@+id/newFolder_option"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/settings"
+        android:id="@+id/settings_option"
+        app:showAsAction= "never" />
+
+    <item
+        android:title="@string/trash"
+        android:id="@+id/trash_option"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/favourites"
+        android:id="@+id/favourites_option"
+        app:showAsAction="never" />
+</menu>
