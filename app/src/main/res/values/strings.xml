@@ -1,20 +1,25 @@
 <resources>
     <string name="app_name">Demo01</string>
-    <!--    App Top Bar Menu Options Title-->
     <string name="settings">Settings</string>
     <string name="select_items">Select items</string>
-    <string name="new_folder">New Folder</string>
     <string name="trash">Trash</string>
     <string name="favourites">Favourites</string>
-    <!--    Bottom Navigation Menu Title-->
     <string name="photos">Photos</string>
     <string name="folders">Folders</string>
-    <!--    Contextual Action Bar Option-->
-    <string name="share">Share</string>
-    <string name="delete">Delete</string>
-    <string name="select_all">Select All</string>
-    <string name="favourite">Favourite</string>
-    <string name="move_to_folder">Move to folder</string>
-    <string name="copy_to_folder">Copy to folder</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 </resources>

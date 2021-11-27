@@ -1,0 +1,32 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:paddingTop="20dp"
+    android:textAlignment="center">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/urlEditText"
+            android:hint="Input Your Image Url Here"
+            android:inputType="text" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/confirmUrlButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Confirm"
+            android:textAllCaps="false"
+            android:textSize="20sp" />
+    </TableRow>
+</TableLayout>
