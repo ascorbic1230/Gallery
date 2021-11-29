@@ -8,18 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
-public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewAdapter.PhotoViewHolder> {
-    private List<String> listImgPaths;
+public class PhotoViewAdapter extends RecyclerView.Adapter {
+    private ArrayList<Image> listImgPaths;
+    private ArrayList<String> MonthYearGroup;
     private Context mContext;
+    private RecyclerView parentLayout;
     private boolean isItemClickable = false;
 
     public void setItemClickable(boolean isItemClickable) {
@@ -31,45 +39,71 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewAdapter.Phot
         this.mContext = mContext;
     }
 
-    public void setData(List<String> listImgPaths) {
+    public void setData(ArrayList<Image> listImgPaths, ArrayList<String> MonthYearGroup,RecyclerView parent) {
         this.listImgPaths = listImgPaths;
+        this.MonthYearGroup = MonthYearGroup;
+        this.parentLayout = parent;
         notifyDataSetChanged();
     }
 
     // inflates the cell layout from xml when needed
     @Override
     @NonNull
-    public PhotoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View view;
+        if (viewType == 0) {
+            view = layoutInflater.inflate(R.layout.recyclerview_textview, parent, false);
+            return new TextViewHolder(view);
+        }
+        view = layoutInflater.inflate(R.layout.recyclerview_item, parent, false);
         return new PhotoViewHolder(view);
     }
-
     @Override
-    public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
-        String curPath = listImgPaths.get(position);
-        Log.i("curpath", curPath);
-        Glide.with(mContext)
-                .load(curPath)
-                .apply(new RequestOptions().centerCrop())
-                .into(holder.imgPhoto);
-        if (isItemClickable)
-            holder.setClickable(true);
-        else
-            holder.setClickable(false);
+    public int getItemViewType(int position) {
+        Image item = listImgPaths.get(position);
+        if (item.getType() == 0) {
+            return 0;
+        }
+        return 1;
+    }
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        Image item = listImgPaths.get(position);
+        if (item.getType() == 0) {
+            TextViewHolder textViewHolder = (TextViewHolder) holder;
+            textViewHolder.textView.setText("Tháng " + item.getMonth() + ", năm " + item.getYear());
+            StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setFullSpan(true);
+            holder.itemView.setLayoutParams(layoutParams);
+        }
+        else {
+            PhotoViewHolder photoViewHolder = (PhotoViewHolder) holder;
+            String curPath = listImgPaths.get(position).getImageUri();
+            Log.i("curpath", curPath);
+            Glide.with(mContext)
+                    .load(curPath)
+                    .apply(new RequestOptions().centerCrop())
+                    .into(photoViewHolder.imgPhoto);
+            if (isItemClickable)
+               photoViewHolder.setClickable(true);
+            else
+                photoViewHolder.setClickable(false);
 
-        holder.imgPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.isClickable()) {
-                    holder.toggleChecked();
-                } else {
-                    Intent intent = new Intent(mContext, FullscreenImgActivity.class);
-                    intent.putExtra("curPath", curPath);
-                    ((MainActivity) mContext).startActivity(intent);
+            photoViewHolder.imgPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (photoViewHolder.isClickable()) {
+                        photoViewHolder.toggleChecked();
+                    } else {
+                        Intent intent = new Intent(mContext, FullscreenImgActivity.class);
+                        intent.putExtra("curPath", curPath);
+                        ((MainActivity) mContext).startActivity(intent);
+                    }
+
                 }
-
-            }
-        });
+            });
+        }
     }
 
     // total number of cells
@@ -80,7 +114,13 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewAdapter.Phot
         else
             return 0;
     }
-
+    public class TextViewHolder extends RecyclerView.ViewHolder {
+        TextView textView;
+        public TextViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.recyclerViewTextView);
+        }
+    }
     public class PhotoViewHolder extends RecyclerView.ViewHolder {
         private ImageView imgPhoto;
         private CheckBox imgCheckBox;
@@ -92,8 +132,6 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewAdapter.Phot
             imgCheckBox = itemView.findViewById(R.id.imgCheckBox);
             imgCheckBox.setVisibility(View.INVISIBLE);
         }
-
-        ;
 
         public void setClickable(boolean val) {
             clickable = val;
