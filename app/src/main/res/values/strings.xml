@@ -11,8 +11,8 @@
     <string name="import_img_clipboard">Import From Clipboard</string>
     <string name="slideshow">SlideShow</string>
     <!--Fragment2-Items-->
+    <string name="folder_setting">Setting</string>
     <string name="folder_new">New Folder</string>
-    <string name="folder_select">Select Folders</string>
     <string name="folder_pin">Set Pin For Secret Folder</string>
     <!--??-->
     <string name="title_activity_settings">Settings</string>

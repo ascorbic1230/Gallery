@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -112,14 +114,16 @@ public class ImagesManager {
         File myDir = new File(folderPath);
         if (!myDir.exists() && !myDir.isDirectory())
             myDir.mkdirs();
-        File[] files = myDir.listFiles();
-        if (files == null)
+        File[] filess = myDir.listFiles();
+        if (filess == null)
             return;
         //Load anh trong folder cua minh
-        for (int i = 0; i < files.length; i++)
-            listAllImages.add(folderPath + File.separator + files[i].getName());
+        for (int i = 0; i < filess.length; i++)
+            listAllImages.add(folderPath + File.separator + filess[i].getName());
         //Load anh tu phone gallery & Update RecyclerView
-        loadImagesFromPhoneGallery();
+        if (folderPath.equals(mContext.getFilesDir().getAbsolutePath() + File.separator + "All Images"))
+            loadImagesFromPhoneGallery();
+        myRecyclerViewAdapter.setData(listAllImages);
     }
 
 
@@ -130,7 +134,6 @@ public class ImagesManager {
         int col_idx_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         while (cursor.moveToNext())
             listAllImages.add(cursor.getString(col_idx_data));
-        myRecyclerViewAdapter.setData(listAllImages);
     }
 
     public void importImgByUrl(String url) {

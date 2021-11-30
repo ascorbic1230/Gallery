@@ -19,48 +19,24 @@
         app:liftOnScroll="true">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
+            android:id="@+id/topAppBar2"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/menu1"
+            app:menu="@menu/menu2"
             app:title="@string/fragment2_name"
             app:titleCentered="true" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <Button
-        android:id="@+id/allImagesButton"
+    <GridView
+        android:id="@+id/folderGridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:background="@color/lightblue"
-        android:text="All Images" />
+        android:layout_marginTop="50dp"
+        android:numColumns="2">
 
-    <Button
-        android:id="@+id/folder1Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/allImagesButton"
-        android:background="@color/lightblue"
-        android:text="Folder1" />
+    </GridView>
 
-
-    <Button
-        android:id="@+id/folder2Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/folder1Button"
-        android:background="@color/lightblue"
-        android:text="Folder2" />
-
-
-    <Button
-        android:id="@+id/recentlyDeletedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/folder2Button"
-        android:background="@color/lightblue"
-        android:text="Recently Deleted" />
 
 </RelativeLayout>

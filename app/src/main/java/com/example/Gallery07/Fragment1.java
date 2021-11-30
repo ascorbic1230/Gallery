@@ -43,23 +43,24 @@ public class Fragment1 extends Fragment {
     private View deleteView;
     private View urlView;
     private EditText urlEditText;
-    private String folderName = "AllImages";
+    private String folderName = "All Images";
     //Avoid Multiple Click On The Same Target
-    private long mLastClickTime = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1, container, false);
+        topAppBar1 = view.findViewById(R.id.topAppBar1);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            folderName = arguments.getString("foldernum");
+            folderName = arguments.getString("foldername");
+            topAppBar1.setTitle(folderName);
         }
+        Log.i("folderName: ", folderName);
         //Get everything from this view
         hasCheckBox = false;
         selectButton = (Button) view.findViewById(R.id.selectButton);
         deleteView = (View) view.findViewById(R.id.deletebottomui_layout);
         deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
-        topAppBar1 = view.findViewById(R.id.topAppBar1);
         imagesManager = new ImagesManager(getActivity(), folderName);
         imagesManager.setRecyclerView(view.findViewById(R.id.myRecyclerView));
         imagesManager.loadImages();
@@ -78,8 +79,7 @@ public class Fragment1 extends Fragment {
                 if (itemId == R.id.menu1_setting) {
                     Intent intent = new Intent(getActivity(), Settings.class);
                     startActivity(intent);
-                } else if (itemId == R.id.menu1_import_img && SystemClock.elapsedRealtime() - mLastClickTime >= 1000) {
-                    mLastClickTime = SystemClock.elapsedRealtime();
+                } else if (itemId == R.id.menu1_import_img) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);

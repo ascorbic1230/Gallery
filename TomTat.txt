@@ -1,1 +1,2 @@
-Thêm SlideShow
+Có thể tự thêm Folder
+Sửa giao diện Folder làm theo GridView, Thêm class Folder
