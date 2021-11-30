@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/select_items"
-        android:id="@+id/selectItems_menu"
+        android:title="@string/setting"
+        android:id="@+id/menu1_setting"
         app:showAsAction="never" />
 
     <item
-        android:title="@string/settings"
-        android:id="@+id/settings_menu"
+        android:title="@string/import_img"
+        android:id="@+id/menu1_import_img"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/import_img_clipboard"
+        android:id="@+id/menu1_import_img_clipboard"
         app:showAsAction= "never" />
 
     <item
-        android:title="@string/trash"
-        android:id="@+id/trash_menu"
-        app:showAsAction="never" />
-
-    <item
-        android:title="@string/favourites"
-        android:id="@+id/favourites_menu"
+        android:title="@string/slideshow"
+        android:id="@+id/menu1_slideshow"
         app:showAsAction="never" />
 </menu>

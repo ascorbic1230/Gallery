@@ -2,6 +2,7 @@ package com.example.Gallery07;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import com.denzcoskun.imageslider.models.SlideModel;
 
 import java.util.ArrayList;
 
-public class SlideShow extends AppCompatActivity {
+public class SlideShow extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class SlideShow extends AppCompatActivity {
         Bundle args = intent.getBundleExtra("listImgPath");
         ArrayList<String> listImgPath = (ArrayList<String>) args.getSerializable("ARRAYLIST");
         for (String imgPath : listImgPath) {
-            imageList.add(new SlideModel("file://" +imgPath));
+            imageList.add(new SlideModel("file://" + imgPath));
             Log.i("ListPath: ", imgPath);
 
         }

@@ -5,27 +5,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragment2">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/menu1"
+            app:title="@string/fragment2_name"
+            app:titleCentered="true" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <Button
-        android:id="@+id/allPhotosButton"
+        android:id="@+id/allImagesButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
         android:background="@color/lightblue"
-        android:text="All Photos" />
+        android:text="All Images" />
+
+    <Button
+        android:id="@+id/folder1Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/allImagesButton"
+        android:background="@color/lightblue"
+        android:text="Folder1" />
+
+
+    <Button
+        android:id="@+id/folder2Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/folder1Button"
+        android:background="@color/lightblue"
+        android:text="Folder2" />
+
 
     <Button
         android:id="@+id/recentlyDeletedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/allPhotosButton"
+        android:layout_below="@id/folder2Button"
         android:background="@color/lightblue"
         android:text="Recently Deleted" />
 

@@ -31,10 +31,13 @@ public class MainActivity extends AppCompatActivity {
     private MaterialToolbar topAppBar;
     private FragmentStateAdapter pagerAdapter;
     private BottomNavigationView bottomNavigationView;
+    private static MainActivity instance;
+    private int curFragment = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         setContentView(R.layout.screensliderpageractivity);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         Boolean isDarkMode = preferences.getBoolean("darkMode", false);
@@ -48,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null)
             actionBar.hide();
 
-        topAppBar = findViewById(R.id.topAppBar);
         viewPager2 = findViewById(R.id.viewPager2);
         pagerAdapter = new ScreenSlidePagerAdapter(this);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -61,22 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("go to requestPermissions");
             }
         }
-        topAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.selectItems_menu)
-                    Toast.makeText(getApplicationContext(), "Select Items Option selected", Toast.LENGTH_SHORT).show();
-                else if (itemId == R.id.settings_menu) {
-                    Intent intent = new Intent(MainActivity.this, Settings.class);
-                    startActivity(intent);
-                } else if (itemId == R.id.trash_menu)
-                    Toast.makeText(getApplicationContext(), "Select Trash Option selected", Toast.LENGTH_SHORT).show();
-                else if (itemId == R.id.favourites_menu)
-                    Toast.makeText(getApplicationContext(), "Select Favourites Option selected", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -121,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
      * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
      * sequence.
      */
+
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
         public ScreenSlidePagerAdapter(FragmentActivity fa) {
             super(fa);
@@ -132,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return new Fragment1();
                 case 1:
-                    return new Fragment2();
+                    return new Fragment2Container();
             }
             return null;
         }
@@ -149,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(startMain);
+    }
+
+    public void changeFragment(int val) {
+        curFragment = val;
+        pagerAdapter.notifyDataSetChanged();
     }
 
 }

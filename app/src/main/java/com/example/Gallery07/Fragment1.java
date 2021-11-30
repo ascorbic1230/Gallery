@@ -12,11 +12,13 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -24,62 +26,44 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.io.Serializable;
 
 public class Fragment1 extends Fragment {
     private ImagesManager imagesManager;
-    private Button importButton;
+    private MaterialToolbar topAppBar1;
     private Button selectButton;
-    private Button importUrlButton;
-    private Button confirmUrlButton;
-    private Button slideShareButton;
     private boolean hasCheckBox;
     private ImageButton deleteButton;
+    private Button confirmUrlButton;
     private View deleteView;
     private View urlView;
     private EditText urlEditText;
-    private String folderName = "Folder1";
+    private String folderName = "AllImages";
     //Avoid Multiple Click On The Same Target
     private long mLastClickTime = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1, container, false);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            folderName = arguments.getString("foldernum");
+        }
         //Get everything from this view
-        importButton = (Button) view.findViewById(R.id.importButton);
-        selectButton = (Button) view.findViewById(R.id.selectButton);
-        importUrlButton = (Button) view.findViewById(R.id.importUrlButton);
-        slideShareButton=(Button)view.findViewById(R.id.slideShareButton);
         hasCheckBox = false;
+        selectButton = (Button) view.findViewById(R.id.selectButton);
         deleteView = (View) view.findViewById(R.id.deletebottomui_layout);
         deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
+        topAppBar1 = view.findViewById(R.id.topAppBar1);
         imagesManager = new ImagesManager(getActivity(), folderName);
         imagesManager.setRecyclerView(view.findViewById(R.id.myRecyclerView));
         imagesManager.loadImages();
         //import On Click -> Launch activity (and get result later)
-        importButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                someActivityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
-            }
-        });
-        //selectButton On Click -> Set nav invisible, set deleteui visible, setcheckbox visible
-        selectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickSelectedButton();
-            }
-        });
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,47 +71,45 @@ public class Fragment1 extends Fragment {
                 onClickSelectedButton();
             }
         });
-        importUrlButton.setOnClickListener(new View.OnClickListener() {
+        topAppBar1.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                alertDialogBuilder.setCancelable(false);
-                popupInputUrlLayout();
-                alertDialogBuilder.setView(urlView);
-                final AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-                confirmUrlButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String url="";
-                        if (TextUtils.isEmpty(urlEditText.getText()))
-                        {
-                            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                            if (clipboard == null) return;
-                            ClipData clip = clipboard.getPrimaryClip();
-                            if (clip == null) return;
-                            ClipData.Item item = clip.getItemAt(0);
-                            if (item == null) return;
-                            url = item.getText().toString();
-                        }
-                        else
-                        url=urlEditText.getText().toString();
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.menu1_setting) {
+                    Intent intent = new Intent(getActivity(), Settings.class);
+                    startActivity(intent);
+                } else if (itemId == R.id.menu1_import_img && SystemClock.elapsedRealtime() - mLastClickTime >= 1000) {
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    someActivityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+                } else if (itemId == R.id.menu1_import_img_clipboard) {
+                    ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                    try {
+                        ClipData clip = clipboard.getPrimaryClip();
+                        String url = clip.getItemAt(0).getText().toString();
                         imagesManager.importImgByUrl(url);
                         urlEditText.setText("");
-                        alertDialog.cancel();
+                    } catch (Exception e) {
+                        //Do nothing
                     }
-                });
+                    ;
+                } else if (itemId == R.id.menu1_slideshow) {
+                    Intent myIntent = new Intent(getActivity(), SlideShow.class);
+                    Bundle args = new Bundle();
+                    args.putSerializable("ARRAYLIST", (Serializable) imagesManager.getAllImages());
+                    myIntent.putExtra("listImgPath", args);
+                    getActivity().startActivity(myIntent);
+                }
+                return true;
             }
-
         });
-        slideShareButton.setOnClickListener(new View.OnClickListener() {
+        selectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(getActivity(), SlideShow.class);
-                Bundle args = new Bundle();
-                args.putSerializable("ARRAYLIST",(Serializable)imagesManager.getAllImages());
-                myIntent.putExtra("listImgPath",args);
-                getActivity().startActivity(myIntent);
+                onClickSelectedButton();
             }
         });
         return (ViewGroup) view;
@@ -174,11 +156,4 @@ public class Fragment1 extends Fragment {
                 }
             });
 
-
-    private void popupInputUrlLayout() {
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-        urlView = layoutInflater.inflate(R.layout.import_image_url, null);
-        urlEditText = (EditText) urlView.findViewById(R.id.urlEditText);
-        confirmUrlButton = (Button) urlView.findViewById(R.id.confirmUrlButton);
-    }
 }

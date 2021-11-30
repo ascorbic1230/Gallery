@@ -38,9 +38,11 @@ public class ImagesManager {
         folderPath = mContext.getFilesDir().getAbsolutePath() + File.separator + folderName;
         listAllImages = new ArrayList<>();
     }
-    public ArrayList<String> getAllImages(){
+
+    public ArrayList<String> getAllImages() {
         return listAllImages;
     }
+
     public void setRecyclerView(RecyclerView _recyclerView) {
         this.recyclerView = _recyclerView;
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));

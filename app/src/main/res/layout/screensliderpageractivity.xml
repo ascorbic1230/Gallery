@@ -4,26 +4,11 @@
     android:id="@+id/contentFrameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager2"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:liftOnScroll="true">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/menu1"
-            app:title="@string/app_name"
-            app:titleCentered="true" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -35,6 +20,7 @@
         app:itemRippleColor="@color/lightblue"
         app:itemTextColor="@color/bottom_navigation_color"
         app:menu="@menu/bottom_navigation_menu" />
+
     <include
         android:id="@+id/bigimage_layout"
         layout="@layout/big_image"

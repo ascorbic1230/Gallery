@@ -22,10 +22,6 @@
                 android:value="com.example.Gallery07.MainActivity" />
         </activity>
 
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/shake" />
-
         <activity
             android:name=".PermissionActivity"
             android:exported="true">
