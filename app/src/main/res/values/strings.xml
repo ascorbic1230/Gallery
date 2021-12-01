@@ -13,6 +13,8 @@
     <!--Fragment2-Items-->
     <string name="folder_setting">Setting</string>
     <string name="folder_new">New Folder</string>
+    <string name="folder_delete">Delete Folder</string>
+    <string name="folder_delete_cancel">Cancel Delete</string>
     <string name="folder_pin">Set Pin For Secret Folder</string>
     <!--??-->
     <string name="title_activity_settings">Settings</string>

@@ -51,15 +51,11 @@ import java.util.List;
 
 
 public class Fragment2 extends Fragment {
-    private GridLayout gridLayout;
-    private ImageView allImagesImageView;
-    private ImageView folder1ImageView;
-    private ImageView folder2ImageView;
     private MaterialToolbar topAppBar2;
     private Button confirmUrlButton;
     private View urlView;
     private EditText urlEditText;
-    private ArrayList<Folder> folderList;
+    private ArrayList folderList;
     private GridView folderGridView;
     private FolderViewAdapter folderViewAdapter;
 
@@ -83,7 +79,7 @@ public class Fragment2 extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Fragment1 fragment1 = new Fragment1();
                 Bundle arguments = new Bundle();
-                arguments.putString("foldername", folderList.get(position).getFolderName());
+                arguments.putString("foldername", ((Folder) folderList.get(position)).getFolderName());
                 fragment1.setArguments(arguments);
                 assert getFragmentManager() != null;
                 FragmentTransaction trans = getFragmentManager()
@@ -95,6 +91,7 @@ public class Fragment2 extends Fragment {
                 trans.commit();
             }
         });
+        topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(false);
         topAppBar2.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -128,7 +125,7 @@ public class Fragment2 extends Fragment {
                             if (!myDir.exists() && !myDir.isDirectory())
                                 myDir.mkdirs();
                             folderList.add(new Folder(url, R.drawable.ic_baseline_folder_24));
-                            folderViewAdapter.setData(folderList);
+                            folderViewAdapter.setFolderList(folderList);
                             Toast.makeText(getActivity(), "Create folder " + folderPath, Toast.LENGTH_SHORT).show();
                             urlEditText.setText("");
                             alertDialog.cancel();
@@ -136,6 +133,14 @@ public class Fragment2 extends Fragment {
                     });
                 } else if (itemId == R.id.menu2_folder_pin) {
                     //Do nothing
+                } else if (itemId == R.id.menu2_folder_delete) {
+                    folderViewAdapter.setItemClickable(true);
+                    topAppBar2.getMenu().findItem(R.id.menu2_folder_delete).setVisible(false);
+                    topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(true);
+                } else if (itemId == R.id.menu2_folder_delete_cancel) {
+                    folderViewAdapter.setItemClickable(false);
+                    topAppBar2.getMenu().findItem(R.id.menu2_folder_delete).setVisible(true);
+                    topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(false);
                 }
                 ;
                 return true;

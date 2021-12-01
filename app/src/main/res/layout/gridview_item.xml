@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/grid_view_items"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:foregroundTint="#E74C3C">
 
     <ImageView
         android:id="@+id/folderImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_launcher_background" />
+        android:src="@drawable/ic_launcher_background"></ImageView>
+
+    <ImageButton
+        android:id="@+id/folderImageButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:background="#80F1C40F"
+        android:src="@drawable/ic_baseline_remove_circle_outline_24"
+        android:visibility="visible"
+        app:tint="#e74c3c"></ImageButton>
 
     <TextView
         android:id="@+id/folderTextView"

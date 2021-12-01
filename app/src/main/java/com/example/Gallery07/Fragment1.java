@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -39,10 +40,8 @@ public class Fragment1 extends Fragment {
     private Button selectButton;
     private boolean hasCheckBox;
     private ImageButton deleteButton;
-    private Button confirmUrlButton;
     private View deleteView;
-    private View urlView;
-    private EditText urlEditText;
+    private ProgressBar progressBar;
     private String folderName = "All Images";
     //Avoid Multiple Click On The Same Target
 
@@ -61,6 +60,7 @@ public class Fragment1 extends Fragment {
         selectButton = (Button) view.findViewById(R.id.selectButton);
         deleteView = (View) view.findViewById(R.id.deletebottomui_layout);
         deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         imagesManager = new ImagesManager(getActivity(), folderName);
         imagesManager.setRecyclerView(view.findViewById(R.id.myRecyclerView));
         imagesManager.loadImages();
@@ -90,8 +90,8 @@ public class Fragment1 extends Fragment {
                     try {
                         ClipData clip = clipboard.getPrimaryClip();
                         String url = clip.getItemAt(0).getText().toString();
-                        imagesManager.importImgByUrl(url);
-                        urlEditText.setText("");
+                        Log.i("Url is", url);
+                        imagesManager.importImgByUrl(url, progressBar);
                     } catch (Exception e) {
                         //Do nothing
                     }

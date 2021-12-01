@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 
@@ -73,6 +76,7 @@ public class ImagesManager {
             PhotoViewAdapter.PhotoViewHolder viewHolder = (PhotoViewAdapter.PhotoViewHolder) recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
             if (viewHolder.isChecked() == true) {
                 deleteImage(listAllImages.get(i));
+                Log.i("Delete", listAllImages.get(i));
                 listAllImages.remove(i);
             }
         }
@@ -136,15 +140,21 @@ public class ImagesManager {
             listAllImages.add(cursor.getString(col_idx_data));
     }
 
-    public void importImgByUrl(String url) {
+    public void importImgByUrl(String url, ProgressBar progressBar) {
+        progressBar.setVisibility(View.VISIBLE);
         Glide.with(mContext)
+                .applyDefaultRequestOptions(new RequestOptions()
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .error(R.drawable.ic_launcher_background))
                 .asBitmap()
                 .load(url)
+                .timeout(60000)
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         String name = createFileName();
                         saveImage(resource, name);
+                        progressBar.setVisibility(View.INVISIBLE);
                         myRecyclerViewAdapter.setData(listAllImages);
                     }
 

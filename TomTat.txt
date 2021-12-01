@@ -1,2 +1,3 @@
-Có thể tự thêm Folder
-Sửa giao diện Folder làm theo GridView, Thêm class Folder
+v1.6.2
+Có thể xóa Folder
+Sửa lỗi load Image từ ClipBoard không được
