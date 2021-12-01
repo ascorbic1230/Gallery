@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <ImageView
         android:id="@+id/bigImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background"
-        tools:layout_editor_absoluteX="142dp" />
+        app:srcCompat="@drawable/ic_launcher_background" />
 
     <Button
         android:id="@+id/backButton"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:gravity="center"
-        android:text="AddTo"
+        android:text="Move To"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

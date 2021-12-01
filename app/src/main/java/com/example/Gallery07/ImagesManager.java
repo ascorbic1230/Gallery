@@ -23,8 +23,12 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +40,9 @@ public class ImagesManager {
     private Context mContext;
     private String folderPath;  //Thu muc rieng cua app
     private static int photoNumber = 0; //Danh so thu tu anh, tranh tinh trang trung ten khi import nhieu anh cung luc
+
+    private final String defaultFolder = "All Images";
+    private final String trashFolder = "Trash";
 
     public ImagesManager(Context mContext, String folderName) {
         super();
@@ -76,7 +83,6 @@ public class ImagesManager {
             PhotoViewAdapter.PhotoViewHolder viewHolder = (PhotoViewAdapter.PhotoViewHolder) recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
             if (viewHolder.isChecked() == true) {
                 deleteImage(listAllImages.get(i));
-                Log.i("Delete", listAllImages.get(i));
                 listAllImages.remove(i);
             }
         }
@@ -91,9 +97,13 @@ public class ImagesManager {
     }
 
     public void deleteImage(String path) {
-        File fi = new File(path);
-        if (fi.exists())
-            fi.delete();
+        if (new File(path).getParentFile().getName().equals(trashFolder)) {
+            File fi = new File(path);
+            if (fi.exists())
+                fi.delete();
+        } else {
+            moveFile(path, trashFolder);
+        }
     }
 
     private void saveImage(Bitmap bitmap, String name) {
@@ -125,7 +135,7 @@ public class ImagesManager {
         for (int i = 0; i < filess.length; i++)
             listAllImages.add(folderPath + File.separator + filess[i].getName());
         //Load anh tu phone gallery & Update RecyclerView
-        if (folderPath.equals(mContext.getFilesDir().getAbsolutePath() + File.separator + "All Images"))
+        if (folderPath.equals(mContext.getFilesDir().getAbsolutePath() + File.separator + defaultFolder))
             loadImagesFromPhoneGallery();
         myRecyclerViewAdapter.setData(listAllImages);
     }
@@ -148,8 +158,14 @@ public class ImagesManager {
                         .error(R.drawable.ic_launcher_background))
                 .asBitmap()
                 .load(url)
-                .timeout(60000)
+                .timeout(5000)
                 .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         String name = createFileName();
@@ -169,5 +185,44 @@ public class ImagesManager {
         if (photoNumber > 99)
             photoNumber = 0;
         return (new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + photoNumber + ".png");
+    }
+
+    public void moveFile(String srcPath, String folderDes) {
+        String desPath = mContext.getFilesDir().getAbsolutePath() + File.separator + folderDes;
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+
+            //create output directory if it doesn't exist
+            File dir = new File(desPath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            in = new FileInputStream(srcPath);
+            out = new FileOutputStream(desPath + File.separator + createFileName());
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            in = null;
+
+            // write the output file
+            out.flush();
+            out.close();
+            out = null;
+
+            // delete the original file
+            new File(srcPath).delete();
+
+
+        } catch (FileNotFoundException fnfe1) {
+            Log.e("tag", fnfe1.getMessage());
+        } catch (Exception e) {
+            Log.e("tag", e.getMessage());
+        }
     }
 }
