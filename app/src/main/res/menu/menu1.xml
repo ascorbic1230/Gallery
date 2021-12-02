@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="@string/setting"
+        android:id="@+id/menu1_setting"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/import_img"
+        android:id="@+id/menu1_import_img"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/import_img_clipboard"
+        android:id="@+id/menu1_import_img_clipboard"
+        app:showAsAction= "never" />
+
+    <item
+        android:title="@string/slideshow"
+        android:id="@+id/menu1_slideshow"
+        app:showAsAction="never" />
+</menu>

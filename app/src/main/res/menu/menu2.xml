@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="@string/folder_new"
+        android:id="@+id/menu2_folder_new"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/folder_setting"
+        android:id="@+id/menu2_folder_setting"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/folder_pin"
+        android:id="@+id/menu2_folder_pin"
+        app:showAsAction="never" />
+</menu>

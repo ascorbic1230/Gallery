@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/photos_tab"
-        android:enabled="true"
-        android:icon="@drawable/ic_photos_tab"
-        android:title="@string/photos" />
-
-    <item
-        android:id="@+id/folders_tab"
-        android:enabled="true"
-        android:icon="@drawable/ic_folders_tab"
-        android:title="@string/folders" />
+    <item android:id="@+id/menu_1" android:title="@string/photos" android:icon="@drawable/ic_photos_tab"/>
+    <item android:id="@+id/menu_2" android:title="@string/folders" android:icon="@drawable/ic_folders_tab"/>
 </menu>
