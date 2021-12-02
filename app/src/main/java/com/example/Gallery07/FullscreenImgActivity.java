@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.File;
 
@@ -56,9 +57,11 @@ public class FullscreenImgActivity extends AppCompatActivity {
 
         setupActivityResultLaunchers();
 
+        ObjectKey obj = new ObjectKey(System.currentTimeMillis());
+
         Glide.with(getApplicationContext())
                 .load(curPath)
-                .apply(new RequestOptions().centerCrop())
+                .signature(obj)
                 .into(bigImageView);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
