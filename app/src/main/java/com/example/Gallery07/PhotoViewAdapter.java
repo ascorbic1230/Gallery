@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 
@@ -48,9 +49,11 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewAdapter.Phot
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         String curPath = listImgPaths.get(position);
         Log.i("curpath", curPath);
+        ObjectKey obj = new ObjectKey(System.currentTimeMillis());
+
         Glide.with(mContext)
                 .load(curPath)
-                .apply(new RequestOptions().centerCrop())
+                .signature(obj)
                 .into(holder.imgPhoto);
         if (isItemClickable)
             holder.setClickable(true);

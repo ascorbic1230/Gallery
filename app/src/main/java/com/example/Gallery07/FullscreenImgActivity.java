@@ -113,7 +113,9 @@ public class FullscreenImgActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             String newFilePath = data.getStringExtra(ImageEditorIntentBuilder.OUTPUT_PATH);
             boolean isImageEdit = data.getBooleanExtra(EditImageActivity.IS_IMAGE_EDITED, false);
-            System.out.println(newFilePath);
+
+            Log.d("curPath: ", curPath);
+            Log.d("newFilePath: ", newFilePath);
 
             if (isImageEdit) {
                 File imageFile = new File(newFilePath);
