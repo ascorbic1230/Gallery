@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,9 +81,13 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
             PhotoViewHolder photoViewHolder = (PhotoViewHolder) holder;
             String curPath = ((CImage) listImgPaths.get(position)).getImageUri();
             Log.i("curpath", curPath);
+          
+            ObjectKey obj = new ObjectKey(System.currentTimeMillis());
+          
             Glide.with(mContext)
                     .load(curPath)
                     .apply(new RequestOptions().centerCrop())
+                    .signature(obj)
                     .into(photoViewHolder.imgPhoto);
             if (isItemClickable)
                 photoViewHolder.setClickable(true);
