@@ -1,19 +1,12 @@
 package com.example.Gallery07;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,45 +14,28 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.GridView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Fragment2 extends Fragment {
-    private GridLayout gridLayout;
-    private ImageView allImagesImageView;
-    private ImageView folder1ImageView;
-    private ImageView folder2ImageView;
     private MaterialToolbar topAppBar2;
-    private Button confirmUrlButton;
-    private View urlView;
-    private EditText urlEditText;
-    private ArrayList<Folder> folderList;
+    private Button formConfirmButton;
+    private View formView;
+    private EditText formEditText;
+    private ArrayList folderList;
     private GridView folderGridView;
     private FolderViewAdapter folderViewAdapter;
 
@@ -83,7 +59,7 @@ public class Fragment2 extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Fragment1 fragment1 = new Fragment1();
                 Bundle arguments = new Bundle();
-                arguments.putString("foldername", folderList.get(position).getFolderName());
+                arguments.putString("foldername", ((Folder) folderList.get(position)).getFolderName());
                 fragment1.setArguments(arguments);
                 assert getFragmentManager() != null;
                 FragmentTransaction trans = getFragmentManager()
@@ -95,6 +71,7 @@ public class Fragment2 extends Fragment {
                 trans.commit();
             }
         });
+        topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(false);
         topAppBar2.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -106,36 +83,44 @@ public class Fragment2 extends Fragment {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setCancelable(false);
                     popupInputUrlLayout();
-                    alertDialogBuilder.setView(urlView);
+                    alertDialogBuilder.setView(formView);
                     final AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                    confirmUrlButton.setOnClickListener(new View.OnClickListener() {
+                    formConfirmButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String url = "";
-                            if (TextUtils.isEmpty(urlEditText.getText())) {
+                            String form = "";
+                            if (TextUtils.isEmpty(formEditText.getText())) {
                                 ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                                 if (clipboard == null) return;
                                 ClipData clip = clipboard.getPrimaryClip();
                                 if (clip == null) return;
                                 ClipData.Item item = clip.getItemAt(0);
                                 if (item == null) return;
-                                url = item.getText().toString();
+                                form = item.getText().toString();
                             } else
-                                url = urlEditText.getText().toString();
-                            String folderPath = getActivity().getFilesDir().getAbsolutePath() + File.separator + url;
+                                form = formEditText.getText().toString();
+                            String folderPath = getActivity().getFilesDir().getAbsolutePath() + File.separator + form;
                             File myDir = new File(folderPath);
                             if (!myDir.exists() && !myDir.isDirectory())
                                 myDir.mkdirs();
-                            folderList.add(new Folder(url, R.drawable.ic_baseline_folder_24));
-                            folderViewAdapter.setData(folderList);
+                            folderList.add(new Folder(form, R.drawable.ic_baseline_folder_24));
+                            folderViewAdapter.setFolderList(folderList);
                             Toast.makeText(getActivity(), "Create folder " + folderPath, Toast.LENGTH_SHORT).show();
-                            urlEditText.setText("");
+                            formEditText.setText("");
                             alertDialog.cancel();
                         }
                     });
                 } else if (itemId == R.id.menu2_folder_pin) {
                     //Do nothing
+                } else if (itemId == R.id.menu2_folder_delete) {
+                    folderViewAdapter.setItemClickable(true);
+                    topAppBar2.getMenu().findItem(R.id.menu2_folder_delete).setVisible(false);
+                    topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(true);
+                } else if (itemId == R.id.menu2_folder_delete_cancel) {
+                    folderViewAdapter.setItemClickable(false);
+                    topAppBar2.getMenu().findItem(R.id.menu2_folder_delete).setVisible(true);
+                    topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(false);
                 }
                 ;
                 return true;
@@ -147,9 +132,9 @@ public class Fragment2 extends Fragment {
 
     private void popupInputUrlLayout() {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-        urlView = layoutInflater.inflate(R.layout.import_image_url, null);
-        urlEditText = (EditText) urlView.findViewById(R.id.urlEditText);
-        urlEditText.setHint("Enter folder name");
-        confirmUrlButton = (Button) urlView.findViewById(R.id.confirmUrlButton);
+        formView = layoutInflater.inflate(R.layout.form_new_folder, null);
+        formEditText = (EditText) formView.findViewById(R.id.formEditText);
+        formEditText.setHint("Enter folder name");
+        formConfirmButton = (Button) formView.findViewById(R.id.formCancelButton);
     }
 }
