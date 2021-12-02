@@ -2,24 +2,19 @@ package com.example.Gallery07;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -99,7 +94,7 @@ public class Fragment1 extends Fragment {
                 } else if (itemId == R.id.menu1_slideshow) {
                     Intent myIntent = new Intent(getActivity(), SlideShow.class);
                     Bundle args = new Bundle();
-                    args.putSerializable("ARRAYLIST", (Serializable) imagesManager.getAllImages());
+                    args.putSerializable("ARRAYLIST", (Serializable) imagesManager.getAllImagePaths());
                     myIntent.putExtra("listImgPath", args);
                     getActivity().startActivity(myIntent);
                 }
