@@ -62,6 +62,7 @@ public class Fragment2 extends Fragment {
                 arguments.putString("foldername", ((Folder) folderList.get(position)).getFolderName());
                 fragment1.setArguments(arguments);
                 assert getFragmentManager() != null;
+//                assert getActivity().getSupportFragmentManager() != null;
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
                 trans.replace(R.id.emptyLayoutId, fragment1);
@@ -72,6 +73,7 @@ public class Fragment2 extends Fragment {
             }
         });
         topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(false);
+        topAppBar2.getMenu().findItem(R.id.menu2_folder_setting).setVisible(false);
         topAppBar2.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
