@@ -1,7 +1,9 @@
 package com.example.Gallery07;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.WallpaperManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -40,6 +42,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -59,6 +62,7 @@ public class FullscreenImgActivity extends AppCompatActivity {
     private View formView;
     private ListView formListView;
     private Button formCancelButton;
+    private WallpaperManager wallpaperManager;
 
     //Avoid Multiple Click On The Same Target
     @Override
@@ -67,6 +71,8 @@ public class FullscreenImgActivity extends AppCompatActivity {
         setContentView(R.layout.fullscreen_img);
         bigImageView = findViewById(R.id.bigImageView);
         bottomMenu = findViewById(R.id.bottom_menu);
+
+        wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
 
         Intent intent = getIntent();
         setupActivityResultLaunchers();
@@ -88,6 +94,9 @@ public class FullscreenImgActivity extends AppCompatActivity {
                     case R.id.editMenu:
                         EditImage();
                         break;
+                    case R.id.wallpaperMenu:
+                        setWallpaper();
+                        break;
                     case R.id.backMenu:
                         finish();
                         break;
@@ -98,6 +107,18 @@ public class FullscreenImgActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void setWallpaper() {
+        try {
+            File imageFile = new File(curPath);
+            if (imageFile.exists()) {
+                Bitmap image = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                wallpaperManager.setBitmap(image);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addToFolder() {

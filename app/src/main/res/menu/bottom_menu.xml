@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/editMenu" android:title="Edit" android:icon="@drawable/ic_edit"/>
+    <item android:id="@+id/wallpaperMenu" android:title="Set wallpaper" android:icon="@drawable/ic_wallpaper"/>
     <item android:id="@+id/backMenu" android:title="Return" android:icon="@drawable/ic_return"/>
     <item android:id="@+id/moveMenu" android:title="Add to folder" android:icon="@drawable/ic_folder"/>
 </menu>

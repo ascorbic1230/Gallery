@@ -73,6 +73,7 @@ public class Fragment2 extends Fragment {
             }
         });
         topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(false);
+        topAppBar2.getMenu().findItem(R.id.menu2_folder_setting).setVisible(false);
         topAppBar2.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
