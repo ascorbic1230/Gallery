@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,12 +25,16 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,28 +51,23 @@ import iamutkarshtiwari.github.io.ananas.editimage.EditImageActivity;
 import iamutkarshtiwari.github.io.ananas.editimage.ImageEditorIntentBuilder;
 
 public class FullscreenImgActivity extends AppCompatActivity {
-    private final int PHOTO_EDITOR_REQUEST_CODE = 231;
-
-    private ImageView bigImageView;
-    private Button editButton;
-    private Button backButton;
-    private Button addToFolderButton;
-
+    private PhotoView bigImageView;
+    private BottomNavigationView bottomMenu;
     private String curPath;
 
     ActivityResultLauncher<Intent> editResultLauncher;
     private View formView;
     private ListView formListView;
     private Button formCancelButton;
+
     //Avoid Multiple Click On The Same Target
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fullscreen_img);
         bigImageView = findViewById(R.id.bigImageView);
-        editButton = findViewById(R.id.editButton);
-        backButton = findViewById(R.id.backButton);
-        addToFolderButton = findViewById(R.id.addToFolderButton);
+        bottomMenu = findViewById(R.id.bottom_menu);
+
         Intent intent = getIntent();
         setupActivityResultLaunchers();
         curPath = intent.getStringExtra("curPath");
@@ -78,53 +78,58 @@ public class FullscreenImgActivity extends AppCompatActivity {
                 .override(500, 500)
                 .signature(obj)
                 .into(bigImageView);
-        backButton.setOnClickListener(new View.OnClickListener() {
+
+        bottomMenu.getMenu().setGroupCheckable(0, false, true);
+
+        bottomMenu.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditImage();
-            }
-        });
-  
-        addToFolderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FullscreenImgActivity.this);
-                alertDialogBuilder.setCancelable(false);
-                popupMoveToFolder();
-                alertDialogBuilder.setView(formView);
-                final AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-                String path = FullscreenImgActivity.this.getFilesDir().getAbsolutePath();
-                File directory = new File(path);
-                File[] files = directory.listFiles();
-                ArrayList<String> listFolderNames = new ArrayList<String>();
-                for (int i = 0; i < files.length; i++) {
-                    listFolderNames.add(files[i].getName());
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.editMenu:
+                        EditImage();
+                        break;
+                    case R.id.backMenu:
+                        finish();
+                        break;
+                    case R.id.moveMenu:
+                        addToFolder();
+                        break;
                 }
-                ArrayAdapter<String> itemsAdapter =
-                        new ArrayAdapter<String>(FullscreenImgActivity.this, android.R.layout.simple_list_item_1, listFolderNames);
-                formListView.setAdapter(itemsAdapter);
-                formListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                        moveFile(curPath, listFolderNames.get(position));
-                        Toast.makeText(FullscreenImgActivity.this, "Move file successfully", Toast.LENGTH_SHORT).show();
-                        alertDialog.cancel();
-                        onBackPressed();
-                    }
-                });
-                formCancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        alertDialog.cancel();
-                    }
-                });
+                return true;
+            }
+        });
+    }
+
+    private void addToFolder() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FullscreenImgActivity.this);
+        alertDialogBuilder.setCancelable(false);
+        popupMoveToFolder();
+        alertDialogBuilder.setView(formView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+        String path = FullscreenImgActivity.this.getFilesDir().getAbsolutePath();
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        ArrayList<String> listFolderNames = new ArrayList<String>();
+        for (int i = 0; i < files.length; i++) {
+            listFolderNames.add(files[i].getName());
+        }
+        ArrayAdapter<String> itemsAdapter =
+                new ArrayAdapter<String>(FullscreenImgActivity.this, android.R.layout.simple_list_item_1, listFolderNames);
+        formListView.setAdapter(itemsAdapter);
+        formListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                moveFile(curPath, listFolderNames.get(position));
+                Toast.makeText(FullscreenImgActivity.this, "Move file successfully", Toast.LENGTH_SHORT).show();
+                alertDialog.cancel();
+                onBackPressed();
+            }
+        });
+        formCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.cancel();
             }
         });
     }
@@ -206,7 +211,6 @@ public class FullscreenImgActivity extends AppCompatActivity {
                     .build();
             EditImageActivity.start(editResultLauncher, intent, this);
         } catch (Exception e) {
-//            Log.e("editor eror", e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -230,4 +234,5 @@ public class FullscreenImgActivity extends AppCompatActivity {
                 }
             }
         }
+    }
 }

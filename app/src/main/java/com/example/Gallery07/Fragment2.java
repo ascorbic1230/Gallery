@@ -62,6 +62,7 @@ public class Fragment2 extends Fragment {
                 arguments.putString("foldername", ((Folder) folderList.get(position)).getFolderName());
                 fragment1.setArguments(arguments);
                 assert getFragmentManager() != null;
+//                assert getActivity().getSupportFragmentManager() != null;
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
                 trans.replace(R.id.emptyLayoutId, fragment1);
