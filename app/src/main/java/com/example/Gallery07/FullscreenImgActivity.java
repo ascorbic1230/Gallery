@@ -2,12 +2,14 @@ package com.example.Gallery07;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.WallpaperManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import android.annotation.SuppressLint;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.io.IOException;
 
 import iamutkarshtiwari.github.io.ananas.editimage.EditImageActivity;
 import iamutkarshtiwari.github.io.ananas.editimage.ImageEditorIntentBuilder;
@@ -49,6 +53,7 @@ public class FullscreenImgActivity extends AppCompatActivity {
     private final int PHOTO_EDITOR_REQUEST_CODE = 231;
 
     private ImageView bigImageView;
+    private Button setWallPaperButton;
     private Button editButton;
     private Button backButton;
     private Button addToFolderButton;
@@ -64,6 +69,7 @@ public class FullscreenImgActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fullscreen_img);
+        setWallPaperButton=findViewById(R.id.setWallpaperButton);
         bigImageView = findViewById(R.id.bigImageView);
         editButton = findViewById(R.id.editButton);
         backButton = findViewById(R.id.backButton);
@@ -84,6 +90,27 @@ public class FullscreenImgActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        final WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+        setWallPaperButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onClick(View v) {
+                Log.i(curPath," :uri");
+                try {
+                    // set the wallpaper by calling the setResource function and passing the drawable file
+                    File imageFile = new File(curPath);
+                    if (imageFile.exists()) {
+                        Bitmap image = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                        wallpaperManager.setBitmap(image);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -230,4 +257,5 @@ public class FullscreenImgActivity extends AppCompatActivity {
                 }
             }
         }
+    }
 }
