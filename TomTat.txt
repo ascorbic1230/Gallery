@@ -1,2 +1,16 @@
-Có thể tự thêm Folder
-Sửa giao diện Folder làm theo GridView, Thêm class Folder
+v1.5.0
+Thêm SlideShow
+v1.6.0
+Sửa giao diện.
+Có Folder All Images để chứa tất cả ảnh trong Gallery Gốc và ảnh của mình(nếu có).
+Import ảnh bằng URL đổi thành Import ảnh trong ClipBoard
+v1.6.1
+Thêm Folder
+v1.6.2
+Xóa Folder
+v1.6.3
+Thêm tính năng Folder, bao gồm:
+- Folder Trash chứa ảnh sau khi xóa
+- Di chuyển ảnh từ Folder này sang Folder khác
+Sửa lỗi load Image từ ClipBoard không được
+Vẫn còn lỗi: - Xóa ảnh trong Gallery gốc của máy không được
