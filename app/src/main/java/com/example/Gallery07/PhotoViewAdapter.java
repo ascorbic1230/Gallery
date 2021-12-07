@@ -89,22 +89,30 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
                     .apply(new RequestOptions().centerCrop())
                     .signature(obj)
                     .into(photoViewHolder.imgPhoto);
-            if (isItemClickable)
-                photoViewHolder.setClickable(true);
-            else
-                photoViewHolder.setClickable(false);
-            photoViewHolder.imgPhoto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (photoViewHolder.isClickable()) {
-                        photoViewHolder.toggleChecked();
-                    } else {
+
+            if (isItemClickable) {
+                ((PhotoViewHolder) holder).imgCheckBox.setVisibility(View.VISIBLE);
+                ((PhotoViewHolder) holder).imgCheckBox.setChecked(item.isChecked());
+                ((PhotoViewHolder) holder).imgCheckBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        item.setChecked(((PhotoViewHolder) holder).imgCheckBox.isChecked());
+                        Fragment1.changeTitleContextualActionBar();
+                    }
+                });
+            }
+            else {
+                ((PhotoViewHolder) holder).imgCheckBox.setChecked(false);
+                ((PhotoViewHolder) holder).imgCheckBox.setVisibility(View.GONE);
+                ((PhotoViewHolder) holder).imgPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         Intent intent = new Intent(mContext, FullscreenImgActivity.class);
                         intent.putExtra("curPath", curPath);
                         ((MainActivity) mContext).startActivity(intent);
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -135,14 +143,12 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
             super(itemView);
             imgPhoto = itemView.findViewById(R.id.imgPhoto);
             imgCheckBox = itemView.findViewById(R.id.imgCheckBox);
-            imgCheckBox.setVisibility(View.INVISIBLE);
+//            imgCheckBox.setVisibility(View.INVISIBLE);
         }
-
-        ;
 
         public void setClickable(boolean val) {
             clickable = val;
-            if (val == true) {
+            if (val) {
                 imgCheckBox.setChecked(false);
                 imgCheckBox.setVisibility(View.VISIBLE);
             } else
@@ -153,16 +159,13 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
             return clickable;
         }
 
-        public void toggleChecked() {
-            if (imgCheckBox.isChecked())
-                imgCheckBox.setChecked(false);
-            else
-                imgCheckBox.setChecked(true);
+        public void toggleChecked(boolean isChecked) {
+            imgCheckBox.setChecked(isChecked);
         }
 
 
-        public boolean isChecked() {
-            return imgCheckBox.isChecked();
-        }
+//        public boolean isChecked() {
+//            return imgCheckBox.isChecked();
+//        }
     }
 }

@@ -106,16 +106,27 @@ public class ImagesManager {
     }
 
     public void deleteImagesSelected() {
-        int childCount = recyclerView.getChildCount();
-        for (int i = childCount - 1; i >= 0; i--) {
-            try {
-                PhotoViewAdapter.PhotoViewHolder viewHolder = (PhotoViewAdapter.PhotoViewHolder) recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
-                if (viewHolder.isChecked() == true) {
+//        int childCount = recyclerView.getChildCount();
+//        for (int i = childCount - 1; i >= 0; i--) {
+//            try {
+//                PhotoViewAdapter.PhotoViewHolder viewHolder = (PhotoViewAdapter.PhotoViewHolder) recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+//                if (viewHolder.isChecked() == true) {
+//                    deleteImage(((CImage) listAllImages.get(i)).getImageUri());
+//                    listAllImages.remove(i);
+//                }
+//            } catch (Exception e) {
+//                Log.e("Error", e.toString());
+//            }
+//        }
+
+        for (int i = 0; i < listAllImages.size(); i++) {
+            if (((CImage) listAllImages.get(i)).isChecked()) {
+                try {
                     deleteImage(((CImage) listAllImages.get(i)).getImageUri());
                     listAllImages.remove(i);
+                } catch (Exception e) {
+                    Log.e("Error", e.toString());
                 }
-            } catch (Exception e) {
-                Log.e("Error", e.toString());
             }
         }
         //Update RecyclerView
@@ -124,7 +135,26 @@ public class ImagesManager {
 
 
     public void toggleCheckBox(boolean val) {
+        if (!val) {
+            unSelectAllImages();
+        }
         myRecyclerViewAdapter.setItemClickable(val);
+    }
+
+    public void unSelectAllImages() {
+        for (int i = 0; i < listAllImages.size(); i++) {
+            ((CImage) listAllImages.get(i)).setChecked(false);
+        }
+    }
+
+    public int getNumberOfSelectedImages() {
+        int count = 0;
+        for (int i = 0; i < listAllImages.size(); i++) {
+            if (((CImage) listAllImages.get(i)).isChecked()) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void deleteImage(String path) {
