@@ -47,10 +47,6 @@ public class MainActivity extends AppCompatActivity {
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.hide();
-
         viewPager2 = findViewById(R.id.viewPager2);
         pagerAdapter = new ScreenSlidePagerAdapter(this);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -67,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                Fragment1.stopActionMode();
                 switch (position) {
                     case 0:
                         bottomNavigationView.getMenu().findItem(R.id.menu_1).setChecked(true);
@@ -94,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setNavVisible(boolean val) {
-        if (val == true) {
+        if (val) {
             bottomNavigationView.setVisibility(View.VISIBLE);
             bottomNavigationView.setClickable(true);
         } else {
