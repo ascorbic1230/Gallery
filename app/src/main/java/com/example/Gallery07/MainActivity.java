@@ -31,13 +31,11 @@ public class MainActivity extends AppCompatActivity {
     private MaterialToolbar topAppBar;
     private FragmentStateAdapter pagerAdapter;
     private BottomNavigationView bottomNavigationView;
-    private static MainActivity instance;
-    private int curFragment = 1;
+    public Fragment1 fragment1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        instance = this;
         setContentView(R.layout.screensliderpageractivity);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         Boolean isDarkMode = preferences.getBoolean("darkMode", false);
@@ -114,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return new Fragment1();
+                    fragment1 = new Fragment1();
+                    return fragment1;
                 case 1:
                     return new Fragment2Container();
             }
@@ -135,9 +134,5 @@ public class MainActivity extends AppCompatActivity {
         startActivity(startMain);
     }
 
-    public void changeFragment(int val) {
-        curFragment = val;
-        pagerAdapter.notifyDataSetChanged();
-    }
 
 }

@@ -47,10 +47,8 @@ public class Fragment2 extends Fragment {
         String path = getActivity().getFilesDir().getAbsolutePath();
         File directory = new File(path);
         File[] files = directory.listFiles();
-        folderList.add(new Folder("All Images", R.drawable.ic_baseline_folder_24));
         for (int i = 0; i < files.length; i++) {
-            if (!files[i].getName().equals("All Images"))
-                folderList.add(new Folder(files[i].getName(), R.drawable.ic_baseline_folder_24));
+            folderList.add(new Folder(files[i].getName(), R.drawable.ic_baseline_folder_24));
         }
         folderViewAdapter = new FolderViewAdapter(getActivity(), R.layout.gridview_item, folderList);
         folderGridView.setAdapter(folderViewAdapter);
@@ -65,11 +63,12 @@ public class Fragment2 extends Fragment {
 //                assert getActivity().getSupportFragmentManager() != null;
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
-                trans.replace(R.id.emptyLayoutId, fragment1);
+                trans.replace(R.id.emptyLayoutId, fragment1, "newfragment");
                 trans.add(R.id.emptyLayoutId, new FragmentBackButton());
                 trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 trans.addToBackStack(null);
                 trans.commit();
+/*                getFragmentManager().executePendingTransactions();*/
             }
         });
         topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(false);
@@ -108,7 +107,6 @@ public class Fragment2 extends Fragment {
                                 myDir.mkdirs();
                             folderList.add(new Folder(form, R.drawable.ic_baseline_folder_24));
                             folderViewAdapter.setFolderList(folderList);
-                            Toast.makeText(getActivity(), "Create folder " + folderPath, Toast.LENGTH_SHORT).show();
                             formEditText.setText("");
                             alertDialog.cancel();
                         }

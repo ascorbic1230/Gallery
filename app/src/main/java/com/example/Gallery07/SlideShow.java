@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
 
 import java.util.ArrayList;
 
@@ -25,12 +26,12 @@ public class SlideShow extends Activity {
         Bundle args = intent.getBundleExtra("listImgPath");
         ArrayList<String> listImgPath = (ArrayList<String>) args.getSerializable("ARRAYLIST");
         for (String imgPath : listImgPath) {
-            imageList.add(new SlideModel("file://" + imgPath));
+            imageList.add(new SlideModel("file://" + imgPath, ScaleTypes.FIT));
             Log.i("ListPath: ", imgPath);
 
         }
         ImageSlider imageSlider = (ImageSlider) findViewById(R.id.image_slider);
-        imageSlider.setImageList(imageList, true);
+        imageSlider.setImageList(imageList, ScaleTypes.CENTER_INSIDE);
         imageSlider.startSliding(2000);
     }
 }

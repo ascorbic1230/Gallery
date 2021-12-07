@@ -26,11 +26,6 @@ public class FolderViewAdapter extends ArrayAdapter {
     private Context mContext;
     private boolean isItemClickable = false;
 
-    /*
-        public FolderViewAdapter(@NonNull Context context, int resource) {
-            super(context, resource);
-        }
-    */
     public FolderViewAdapter(Context context, int textViewResourceId, ArrayList objects) {
         super(context, textViewResourceId, objects);
         mContext = context;
@@ -67,22 +62,21 @@ public class FolderViewAdapter extends ArrayAdapter {
         } else {
             folderImageButton.setVisibility(View.GONE);
         }
-        if (position != 0)
-            folderImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    File fi = new File(mContext.getFilesDir().getAbsolutePath() + File.separator + ((Folder) folderList.get(position)).getFolderName());
-                    if (fi.isDirectory()) {
-                        String[] children = fi.list();
-                        for (int i = 0; i < children.length; i++) {
-                            new File(fi, children[i]).delete();
-                        }
-                        fi.delete();
+        folderImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File fi = new File(mContext.getFilesDir().getAbsolutePath() + File.separator + ((Folder) folderList.get(position)).getFolderName());
+                if (fi.isDirectory()) {
+                    String[] children = fi.list();
+                    for (int i = 0; i < children.length; i++) {
+                        new File(fi, children[i]).delete();
                     }
-                    folderList.remove(position);
-                    notifyDataSetChanged();
+                    fi.delete();
                 }
-            });
+                folderList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
         folderTextView.setText(((Folder) folderList.get(position)).getFolderName());
         folderImageView.setImageResource(((Folder) folderList.get(position)).getFolderImage());
         return v;

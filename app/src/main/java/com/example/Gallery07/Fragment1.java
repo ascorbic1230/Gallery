@@ -37,46 +37,34 @@ import com.google.android.material.appbar.MaterialToolbar;
 import java.io.Serializable;
 
 public class Fragment1 extends Fragment {
-    private static ImagesManager imagesManager;
     private MaterialToolbar topAppBar1;
     private AppBarLayout appBarLayout1;
-    private Button selectButton;
     private boolean hasCheckBox;
     private ImageButton deleteButton;
-    private View deleteView;
     private ProgressBar progressBar;
+    private ImagesManager imagesManager;
     private static ActionMode actionMode;
     private String folderName = "All Images";
-    //Avoid Multiple Click On The Same Target
 
+    //Avoid Multiple Click On The Same Target
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Bundle arguments = getArguments();
         View view = inflater.inflate(R.layout.fragment1, container, false);
         topAppBar1 = view.findViewById(R.id.topAppBar1);
+
         appBarLayout1 = view.findViewById(R.id.appBarLayout1);
-        Bundle arguments = getArguments();
         if (arguments != null) {
             folderName = arguments.getString("foldername");
             topAppBar1.setTitle(folderName);
         }
         Log.i("folderName: ", folderName);
-        //Get everything from this view
         hasCheckBox = false;
-//        selectButton = (Button) view.findViewById(R.id.selectButton);
-//        deleteView = (View) view.findViewById(R.id.deletebottomui_layout);
         deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         imagesManager = new ImagesManager(getActivity(), folderName);
         imagesManager.setRecyclerView(view.findViewById(R.id.myRecyclerView));
         imagesManager.loadImages();
-        //import On Click -> Launch activity (and get result later)
-//        deleteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                imagesManager.deleteImagesSelected();
-//                onClickSelectedButton();
-//            }
-//        });
         topAppBar1.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -108,6 +96,8 @@ public class Fragment1 extends Fragment {
                     myIntent.putExtra("listImgPath", args);
                     getActivity().startActivity(myIntent);
                 } else if (itemId == R.id.menu1_select_items) {
+                    Toast.makeText(getActivity(), folderName, Toast.LENGTH_SHORT).show();
+
                     appBarLayout1.setVisibility(View.GONE);
                     topAppBar1.setVisibility(View.GONE);
                     actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mCallback);
@@ -117,19 +107,15 @@ public class Fragment1 extends Fragment {
                 return true;
             }
         });
-//        selectButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onClickSelectedButton();
-//            }
-//        });
         return (ViewGroup) view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        imagesManager.setFolder(folderName);
         imagesManager.loadImages();
+        Log.i("folderNameIs: ", folderName);
     }
 
     private final ActionMode.Callback mCallback = new ActionMode.Callback() {
@@ -180,13 +166,12 @@ public class Fragment1 extends Fragment {
         }
     };
 
-    public static void changeTitleContextualActionBar() {
+    public void changeTitleContextualActionBar() {
         int numberSelectedImages = imagesManager.getNumberOfSelectedImages();
         String title = "";
         if (numberSelectedImages > 0) {
             title += numberSelectedImages;
-        }
-        else if (numberSelectedImages == 0) {
+        } else if (numberSelectedImages == 0) {
             title += "Select items";
         }
         actionMode.setTitle(title);

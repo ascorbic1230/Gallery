@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,12 +20,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoViewAdapter extends RecyclerView.Adapter {
     private List listImgPaths;
-    private List MonthYearGroup;
     private Context mContext;
     private RecyclerView parentLayout;
     private boolean isItemClickable = false;
@@ -38,14 +39,13 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
         this.mContext = mContext;
     }
 
-    public void setData(List listImgPaths, ArrayList<String> MonthYearGroup, RecyclerView parent) {
+
+    public void setData(List listImgPaths, RecyclerView parent) {
         this.listImgPaths = listImgPaths;
-        this.MonthYearGroup = MonthYearGroup;
         this.parentLayout = parent;
         notifyDataSetChanged();
     }
 
-    // inflates the cell layout from xml when needed
     @Override
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,20 +70,20 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int tmp = position;
         CImage item = (CImage) listImgPaths.get(position);
         if (item.getType() == 0) {
             TextViewHolder textViewHolder = (TextViewHolder) holder;
-            textViewHolder.textView.setText("Tháng " + item.getMonth() + ", năm " + item.getYear());
+            textViewHolder.textView.setText(item.getDay() + " Tháng " + item.getMonth());
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.setFullSpan(true);
             holder.itemView.setLayoutParams(layoutParams);
         } else {
             PhotoViewHolder photoViewHolder = (PhotoViewHolder) holder;
-            String curPath = ((CImage) listImgPaths.get(position)).getImageUri();
-            Log.i("curpath", curPath);
-          
+            String curPath = ((CImage) listImgPaths.get(tmp)).getImageUri();
+
             ObjectKey obj = new ObjectKey(System.currentTimeMillis());
-          
+
             Glide.with(mContext)
                     .load(curPath)
                     .apply(new RequestOptions().centerCrop())
@@ -97,11 +97,12 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onClick(View v) {
                         item.setChecked(((PhotoViewHolder) holder).imgCheckBox.isChecked());
-                        Fragment1.changeTitleContextualActionBar();
+                        if (item.isChecked())
+                            Toast.makeText(mContext, "check at " + tmp, Toast.LENGTH_SHORT).show();
+                        ((MainActivity) mContext).fragment1.changeTitleContextualActionBar();
                     }
                 });
-            }
-            else {
+            } else {
                 ((PhotoViewHolder) holder).imgCheckBox.setChecked(false);
                 ((PhotoViewHolder) holder).imgCheckBox.setVisibility(View.GONE);
                 ((PhotoViewHolder) holder).imgPhoto.setOnClickListener(new View.OnClickListener() {
