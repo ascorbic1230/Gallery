@@ -37,7 +37,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import java.io.Serializable;
 
 public class Fragment1 extends Fragment {
-    private ImagesManager imagesManager;
+    private static ImagesManager imagesManager;
     private MaterialToolbar topAppBar1;
     private AppBarLayout appBarLayout1;
     private Button selectButton;
@@ -154,10 +154,7 @@ public class Fragment1 extends Fragment {
                     break;
                 case R.id.delete_option:
                     imagesManager.deleteImagesSelected();
-                    imagesManager.toggleCheckBox(true);
-                    break;
-                case R.id.selectAll_option:
-
+                    imagesManager.toggleCheckBox(false);
                     break;
                 case R.id.favorites_option:
                     Toast.makeText(getContext(), "Favourite option clicked", Toast.LENGTH_SHORT).show();
@@ -171,6 +168,7 @@ public class Fragment1 extends Fragment {
                 default:
                     return false;
             }
+            stopActionMode();
             return true;
         }
 
@@ -181,6 +179,18 @@ public class Fragment1 extends Fragment {
             imagesManager.toggleCheckBox(false);
         }
     };
+
+    public static void changeTitleContextualActionBar() {
+        int numberSelectedImages = imagesManager.getNumberOfSelectedImages();
+        String title = "";
+        if (numberSelectedImages > 0) {
+            title += numberSelectedImages;
+        }
+        else if (numberSelectedImages == 0) {
+            title += "Select items";
+        }
+        actionMode.setTitle(title);
+    }
 
     public static void stopActionMode() {
         if (actionMode != null) {

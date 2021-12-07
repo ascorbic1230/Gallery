@@ -13,10 +13,10 @@
         android:id="@+id/delete_option"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:title="@string/select_all"
-        android:id="@+id/selectAll_option"
-        app:showAsAction="never" />
+<!--    <item-->
+<!--        android:title="@string/select_all"-->
+<!--        android:id="@+id/selectAll_option"-->
+<!--        app:showAsAction="never" />-->
 
     <item
         android:title="@string/favourite"
