@@ -71,16 +71,12 @@ public final class Utils {
         }
     }
 
-    public static void scanGalleryFile(String filename) {
-        MediaScannerConnection.scanFile(mContext, new String[]{filename}, null, new MediaScannerConnection.OnScanCompletedListener() {
-            /*
-             *   (non-Javadoc)
-             * @see android.media.MediaScannerConnection.OnScanCompletedListener#onScanCompleted(java.lang.String, android.net.Uri)
-             */
-            public void onScanCompleted(String path, Uri uri) {
-                Toast.makeText(mContext, "done", Toast.LENGTH_SHORT).show();
-            }
-        });
+    public static void scanGalleryFile(String filepath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(filepath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        mContext.sendBroadcast(mediaScanIntent);
     }
 
     public static String createFileName() {
