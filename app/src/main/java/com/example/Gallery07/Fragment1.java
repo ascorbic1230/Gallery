@@ -2,12 +2,16 @@ package com.example.Gallery07;
 
 
 import static com.example.Gallery07.Utils.defaultFolder;
+import static com.example.Gallery07.Utils.mContext;
 
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,12 +33,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Fragment1 extends Fragment {
     private MaterialToolbar topAppBar1;
@@ -132,6 +141,7 @@ public class Fragment1 extends Fragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.share_option:
+                    shareMedia();
                     Toast.makeText(getContext(), "Share option clicked", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.delete_option:
@@ -153,6 +163,7 @@ public class Fragment1 extends Fragment {
         }
     };
 
+
     public void changeTitleContextualActionBar() {
         int numberSelectedImages = imagesManager.getNumberOfSelectedImages();
         String title = "";
@@ -170,6 +181,20 @@ public class Fragment1 extends Fragment {
         }
     }
 
+    public void shareMedia() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("image/jpeg");
+            ArrayList<Uri> files = imagesManager.getListURI();
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            startActivity(Intent.createChooser(intent, null));
+        } catch (Exception e) {
+            Toast.makeText(getContext() ,"fail", Toast.LENGTH_SHORT).show();
+        }
+        imagesManager.unSelectAllImages();
+    }
 
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
