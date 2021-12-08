@@ -92,6 +92,9 @@ public final class Utils {
             if (fi.exists())
                 fi.delete();
         } else {
+            File myDir = new File(mContext.getFilesDir().getAbsolutePath() + File.separator + trashFolder);
+            if (!myDir.exists() && !myDir.isDirectory())
+                myDir.mkdirs();
             copyFile(path, mContext.getFilesDir().getAbsolutePath() + File.separator + trashFolder);
             if (new File(path).getParentFile().getName().equals(defaultFolder)) {
                 deleteGalleryImage(new File(path));

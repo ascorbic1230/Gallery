@@ -24,7 +24,7 @@
         android:layout_centerInParent="true"
         android:background="#80F1C40F"
         android:src="@drawable/ic_baseline_remove_circle_outline_24"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:tint="#e74c3c"></ImageButton>
 
     <TextView

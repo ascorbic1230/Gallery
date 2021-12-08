@@ -1,5 +1,7 @@
 package com.example.Gallery07;
 
+import static com.example.Gallery07.Utils.trashFolder;
+
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -46,8 +48,10 @@ public class Fragment2 extends Fragment {
         File directory = new File(path);
         File[] files = directory.listFiles();
         for (int i = 0; i < files.length; i++) {
-            folderList.add(new CFolder(files[i].getName(), R.drawable.ic_baseline_folder_24));
+            if (!files[i].getName().equals(trashFolder))
+                folderList.add(new CFolder(files[i].getName(), R.drawable.ic_baseline_folder_24));
         }
+        folderList.add(new CFolder(trashFolder, R.drawable.ic_baseline_trash_24));
         folderViewAdapter = new FolderViewAdapter(R.layout.gridview_item, folderList);
         folderGridView.setAdapter(folderViewAdapter);
         folderGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -65,7 +69,7 @@ public class Fragment2 extends Fragment {
                 trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 trans.addToBackStack(null);
                 trans.commit();
-/*              getFragmentManager().executePendingTransactions();*/
+                /*              getFragmentManager().executePendingTransactions();*/
             }
         });
         topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(false);

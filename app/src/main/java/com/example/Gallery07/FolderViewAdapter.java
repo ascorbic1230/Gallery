@@ -1,6 +1,7 @@
 package com.example.Gallery07;
 
 import static com.example.Gallery07.Utils.mContext;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,12 +51,14 @@ public class FolderViewAdapter extends ArrayAdapter {
         TextView folderTextView = (TextView) v.findViewById(R.id.folderTextView);
         ImageView folderImageView = (ImageView) v.findViewById(R.id.folderImageView);
         ImageButton folderImageButton = (ImageButton) v.findViewById(R.id.folderImageButton);
-        if (isItemClickable) {
+        folderTextView.setText(((CFolder) folderList.get(position)).getFolderName());
+        folderImageView.setImageResource(((CFolder) folderList.get(position)).getFolderImage());
+        if (position == folderList.size() - 1)
+            return v;
+        if (isItemClickable)
             folderImageButton.setVisibility(View.VISIBLE);
-
-        } else {
+        else
             folderImageButton.setVisibility(View.GONE);
-        }
         folderImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,8 +74,6 @@ public class FolderViewAdapter extends ArrayAdapter {
                 notifyDataSetChanged();
             }
         });
-        folderTextView.setText(((CFolder) folderList.get(position)).getFolderName());
-        folderImageView.setImageResource(((CFolder) folderList.get(position)).getFolderImage());
         return v;
     }
 
