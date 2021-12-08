@@ -1,7 +1,7 @@
 package com.example.Gallery07;
 
-import static com.example.Gallery07.Utils.deleteImage;
 import static com.example.Gallery07.Utils.copyFile;
+import static com.example.Gallery07.Utils.deleteImagePerma;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -127,7 +127,7 @@ public class FullscreenImgActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 copyFile(curPath, FullscreenImgActivity.this.getFilesDir().getAbsolutePath() + File.separator + listFolderNames.get(position));
-                deleteImage(curPath);
+                deleteImagePerma(curPath);
                 alertDialog.cancel();
                 onBackPressed();
             }

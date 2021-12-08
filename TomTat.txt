@@ -16,3 +16,5 @@ Sửa lỗi load Image từ ClipBoard không được
 Vẫn còn lỗi: - Xóa ảnh trong Gallery gốc của máy không được
 v1.6.4
 Sửa giao diện, fix bug
+v1.6.5
+Fix duplicate ảnh khi move

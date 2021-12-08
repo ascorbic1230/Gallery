@@ -89,6 +89,14 @@ public final class Utils {
         }
     }
 
+    public static void deleteImagePerma(String path) {
+        if (new File(path).getParentFile().getName().equals(defaultFolder)) {
+            deleteGalleryImage(new File(path));
+        } else {
+            new File(path).delete();
+        }
+    }
+
     public static void deleteGalleryImage(File file) {
         String[] projection = {MediaStore.Images.Media._ID};
         String selection = MediaStore.Images.Media.DATA + " = ?";

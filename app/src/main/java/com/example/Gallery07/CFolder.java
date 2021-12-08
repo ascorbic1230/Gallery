@@ -1,6 +1,5 @@
 package com.example.Gallery07;
 
-import android.widget.ImageView;
 
 public class CFolder {
     private String folderName;
