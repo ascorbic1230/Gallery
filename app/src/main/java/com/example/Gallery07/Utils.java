@@ -61,7 +61,7 @@ public final class Utils {
             out.flush();
             out.close();
             if (desPath == galleryPath) {
-                scanGalleryFile(Utils.utils_fragment1.imagesManager, filename);
+                scanGalleryFile(filename);
             }
 
         } catch (FileNotFoundException fnfe1) {
@@ -71,7 +71,7 @@ public final class Utils {
         }
     }
 
-    public static void scanGalleryFile(ImagesManager imgManager, String filename) {
+    public static void scanGalleryFile(String filename) {
         MediaScannerConnection.scanFile(mContext, new String[]{filename}, null, new MediaScannerConnection.OnScanCompletedListener() {
             /*
              *   (non-Javadoc)

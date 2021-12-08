@@ -145,7 +145,7 @@ public class ImagesManager {
             out.flush();
             out.close();
             if (folderPath == galleryPath) {
-                scanGalleryFile(ImagesManager.this, file.getAbsolutePath());
+                scanGalleryFile(file.getAbsolutePath());
             }
             listAllImages.add(1, new CImage(file.getAbsolutePath(), dateTime, 1));
             myRecyclerViewAdapter.setData(listAllImages, recyclerView);
