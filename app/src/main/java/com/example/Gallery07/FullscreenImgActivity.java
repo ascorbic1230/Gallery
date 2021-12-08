@@ -69,7 +69,7 @@ public class FullscreenImgActivity extends AppCompatActivity {
         ObjectKey obj = new ObjectKey(System.currentTimeMillis());
         Glide.with(FullscreenImgActivity.this)
                 .load(curPath)
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_launcher_background))
+                .apply(RequestOptions.placeholderOf(R.drawable.background))
                 .override(500, 500)
                 .signature(obj)
                 .into(bigImageView);

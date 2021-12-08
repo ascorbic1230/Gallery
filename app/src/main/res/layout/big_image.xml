@@ -23,7 +23,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background"
+        app:srcCompat="@drawable/background"
         android:scaleType="fitCenter"
         tools:layout_editor_absoluteX="142dp" />
 
