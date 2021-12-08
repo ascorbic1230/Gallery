@@ -1,10 +1,6 @@
 package com.example.Gallery07;
 
-import android.content.Context;
-import android.media.Image;
-import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Log;
+import static com.example.Gallery07.Utils.mContext;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,16 +19,14 @@ import java.util.List;
 
 public class FolderViewAdapter extends ArrayAdapter {
     private List folderList;
-    private Context mContext;
     private boolean isItemClickable = false;
 
-    public FolderViewAdapter(Context context, int textViewResourceId, ArrayList objects) {
-        super(context, textViewResourceId, objects);
-        mContext = context;
+    public FolderViewAdapter(int textViewResourceId, ArrayList objects) {
+        super(mContext, textViewResourceId, objects);
         folderList = objects;
     }
 
-    public void setFolderList(List<Folder> folderList) {
+    public void setFolderList(List<CFolder> folderList) {
         this.folderList = folderList;
         notifyDataSetChanged();
     }
@@ -65,7 +59,7 @@ public class FolderViewAdapter extends ArrayAdapter {
         folderImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                File fi = new File(mContext.getFilesDir().getAbsolutePath() + File.separator + ((Folder) folderList.get(position)).getFolderName());
+                File fi = new File(mContext.getFilesDir().getAbsolutePath() + File.separator + ((CFolder) folderList.get(position)).getFolderName());
                 if (fi.isDirectory()) {
                     String[] children = fi.list();
                     for (int i = 0; i < children.length; i++) {
@@ -77,8 +71,8 @@ public class FolderViewAdapter extends ArrayAdapter {
                 notifyDataSetChanged();
             }
         });
-        folderTextView.setText(((Folder) folderList.get(position)).getFolderName());
-        folderImageView.setImageResource(((Folder) folderList.get(position)).getFolderImage());
+        folderTextView.setText(((CFolder) folderList.get(position)).getFolderName());
+        folderImageView.setImageResource(((CFolder) folderList.get(position)).getFolderImage());
         return v;
     }
 

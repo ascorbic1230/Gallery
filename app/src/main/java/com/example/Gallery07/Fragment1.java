@@ -1,6 +1,8 @@
 package com.example.Gallery07;
 
 
+import static com.example.Gallery07.Utils.defaultFolder;
+
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -14,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -29,7 +30,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -44,9 +44,8 @@ public class Fragment1 extends Fragment {
     private ProgressBar progressBar;
     private ImagesManager imagesManager;
     private static ActionMode actionMode;
-    private String folderName = "All Images";
+    private String folderName = defaultFolder;
 
-    //Avoid Multiple Click On The Same Target
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle arguments = getArguments();
@@ -58,11 +57,10 @@ public class Fragment1 extends Fragment {
             folderName = arguments.getString("foldername");
             topAppBar1.setTitle(folderName);
         }
-        Log.i("folderName: ", folderName);
         hasCheckBox = false;
         deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        imagesManager = new ImagesManager(getActivity(), folderName);
+        imagesManager = new ImagesManager(folderName);
         imagesManager.setRecyclerView(view.findViewById(R.id.myRecyclerView));
         imagesManager.loadImages();
         topAppBar1.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -113,9 +111,7 @@ public class Fragment1 extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        imagesManager.setFolder(folderName);
         imagesManager.loadImages();
-        Log.i("folderNameIs: ", folderName);
     }
 
     private final ActionMode.Callback mCallback = new ActionMode.Callback() {
@@ -141,15 +137,6 @@ public class Fragment1 extends Fragment {
                 case R.id.delete_option:
                     imagesManager.deleteImagesSelected();
                     imagesManager.toggleCheckBox(false);
-                    break;
-                case R.id.favorites_option:
-                    Toast.makeText(getContext(), "Favourite option clicked", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.moveToFolder_option:
-                    Toast.makeText(getContext(), "Move To Folder option clicked", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.copyToFolder_option:
-                    Toast.makeText(getContext(), "Copy To Folder option clicked", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     return false;
@@ -183,19 +170,6 @@ public class Fragment1 extends Fragment {
         }
     }
 
-//    private void onClickSelectedButton() {
-//        hasCheckBox = !hasCheckBox;
-//        if (hasCheckBox) {
-//            selectButton.setText("CANCEL");
-//            ((MainActivity) getActivity()).setNavVisible(false);
-//            deleteView.setVisibility(View.VISIBLE);
-//        } else {
-//            selectButton.setText("SELECT");
-//            deleteView.setVisibility(View.GONE);
-//            ((MainActivity) getActivity()).setNavVisible(true);
-//        }
-//        imagesManager.toggleCheckBox(hasCheckBox);
-//    }
 
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),

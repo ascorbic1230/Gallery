@@ -27,8 +27,6 @@ public class SlideShow extends Activity {
         ArrayList<String> listImgPath = (ArrayList<String>) args.getSerializable("ARRAYLIST");
         for (String imgPath : listImgPath) {
             imageList.add(new SlideModel("file://" + imgPath, ScaleTypes.FIT));
-            Log.i("ListPath: ", imgPath);
-
         }
         ImageSlider imageSlider = (ImageSlider) findViewById(R.id.image_slider);
         imageSlider.setImageList(imageList, ScaleTypes.CENTER_INSIDE);

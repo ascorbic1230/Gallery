@@ -1,9 +1,4 @@
 package com.example.Gallery07;
-
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.lang.Integer;
 import java.lang.String;
 
 public class CImage {

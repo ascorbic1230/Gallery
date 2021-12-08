@@ -2,34 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="@string/share"
-        android:icon="@drawable/ic_share_24"
         android:id="@+id/share_option"
+        android:icon="@drawable/ic_share_24"
+        android:title="@string/share"
         app:showAsAction="ifRoom" />
 
     <item
-        android:title="@string/delete"
-        android:icon="@drawable/ic_delete_24"
         android:id="@+id/delete_option"
+        android:icon="@drawable/ic_delete_24"
+        android:title="@string/delete"
         app:showAsAction="ifRoom" />
 
-<!--    <item-->
-<!--        android:title="@string/select_all"-->
-<!--        android:id="@+id/selectAll_option"-->
-<!--        app:showAsAction="never" />-->
+    <!--    <item-->
+    <!--        android:title="@string/select_all"-->
+    <!--        android:id="@+id/selectAll_option"-->
+    <!--        app:showAsAction="never" />-->
 
     <item
         android:title="@string/favourite"
-        android:id="@+id/favorites_option"
         app:showAsAction="never" />
 
-    <item
-        android:title="@string/move_to_folder"
-        android:id="@+id/moveToFolder_option"
-        app:showAsAction="never" />
-
-    <item
-        android:title="@string/copy_to_folder"
-        android:id="@+id/copyToFolder_option"
-        app:showAsAction="never" />
 </menu>

@@ -1,5 +1,7 @@
 package com.example.Gallery07;
 
+import static com.example.Gallery07.Utils.utils_fragment1;
+
 import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
@@ -10,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,13 +21,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+import static com.example.Gallery07.Utils.mContext;
 
 public class PhotoViewAdapter extends RecyclerView.Adapter {
     private List listImgPaths;
-    private Context mContext;
     private RecyclerView parentLayout;
     private boolean isItemClickable = false;
 
@@ -35,9 +34,6 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void setmContext(Context mContext) {
-        this.mContext = mContext;
-    }
 
 
     public void setData(List listImgPaths, RecyclerView parent) {
@@ -97,9 +93,7 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onClick(View v) {
                         item.setChecked(((PhotoViewHolder) holder).imgCheckBox.isChecked());
-                        if (item.isChecked())
-                            Toast.makeText(mContext, "check at " + tmp, Toast.LENGTH_SHORT).show();
-                        ((MainActivity) mContext).fragment1.changeTitleContextualActionBar();
+                        utils_fragment1.changeTitleContextualActionBar();
                     }
                 });
             } else {
@@ -144,7 +138,6 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
             super(itemView);
             imgPhoto = itemView.findViewById(R.id.imgPhoto);
             imgCheckBox = itemView.findViewById(R.id.imgCheckBox);
-//            imgCheckBox.setVisibility(View.INVISIBLE);
         }
 
         public void setClickable(boolean val) {
@@ -163,10 +156,5 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
         public void toggleChecked(boolean isChecked) {
             imgCheckBox.setChecked(isChecked);
         }
-
-
-//        public boolean isChecked() {
-//            return imgCheckBox.isChecked();
-//        }
     }
 }

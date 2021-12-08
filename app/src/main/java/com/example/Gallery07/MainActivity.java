@@ -8,33 +8,31 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import static com.example.Gallery07.Utils.utils_fragment1;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final int NUM_PAGES = 2;
     private ViewPager2 viewPager2;
-    private MaterialToolbar topAppBar;
     private FragmentStateAdapter pagerAdapter;
     private BottomNavigationView bottomNavigationView;
-    public Fragment1 fragment1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Utils.setmContext(MainActivity.this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screensliderpageractivity);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -98,10 +96,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
 
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
         public ScreenSlidePagerAdapter(FragmentActivity fa) {
@@ -112,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    fragment1 = new Fragment1();
-                    return fragment1;
+                    utils_fragment1 = new Fragment1();
+                    return utils_fragment1;
                 case 1:
                     return new Fragment2Container();
             }
