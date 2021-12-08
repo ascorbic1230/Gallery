@@ -8,6 +8,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,11 +36,11 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Fragment1 extends Fragment {
     private MaterialToolbar topAppBar1;
     private AppBarLayout appBarLayout1;
-    private boolean hasCheckBox;
     private ProgressBar progressBar;
     private ImagesManager imagesManager;
     private static ActionMode actionMode;
@@ -56,7 +57,6 @@ public class Fragment1 extends Fragment {
             folderName = arguments.getString("foldername");
             topAppBar1.setTitle(folderName);
         }
-        hasCheckBox = false;
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         imagesManager = new ImagesManager(folderName);
         imagesManager.setRecyclerView(view.findViewById(R.id.myRecyclerView));
@@ -129,6 +129,7 @@ public class Fragment1 extends Fragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.share_option:
+                    shareMedia();
                     Toast.makeText(getContext(), "Share option clicked", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.delete_option:
@@ -167,6 +168,20 @@ public class Fragment1 extends Fragment {
         }
     }
 
+    public void shareMedia() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("image/jpeg");
+            ArrayList<Uri> files = imagesManager.getListURI();
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            startActivity(Intent.createChooser(intent, null));
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "fail", Toast.LENGTH_SHORT).show();
+        }
+        imagesManager.unSelectAllImages();
+    }
 
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),

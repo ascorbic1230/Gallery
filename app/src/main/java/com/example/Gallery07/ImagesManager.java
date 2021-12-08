@@ -42,7 +42,7 @@ import java.util.Locale;
 
 public class ImagesManager {
     private RecyclerView recyclerView;
-    public PhotoViewAdapter myRecyclerViewAdapter;
+    private PhotoViewAdapter myRecyclerViewAdapter;
     private String folderPath;  //Thu muc rieng cua app
     private List listAllImages = new ArrayList<CImage>();    //Luu list path dan toi file
 
