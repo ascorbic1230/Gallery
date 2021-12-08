@@ -204,8 +204,8 @@ public class ImagesManager {
         progressBar.setVisibility(View.VISIBLE);
         Glide.with(mContext)
                 .applyDefaultRequestOptions(new RequestOptions()
-                        .placeholder(R.drawable.ic_launcher_background)
-                        .error(R.drawable.ic_launcher_background))
+                        .placeholder(R.drawable.background)
+                        .error(R.drawable.background))
                 .asBitmap()
                 .load("http://" + url.replaceFirst("^(http[s]?://www\\.|http[s]?://|www\\.)", ""))
                 .placeholder(R.drawable.placeholder)
