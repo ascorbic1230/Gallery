@@ -110,6 +110,19 @@ public class ImagesManager {
         myRecyclerViewAdapter.setItemClickable(val);
     }
 
+    public ArrayList<Uri> getListURI() {
+        ArrayList<Uri> files = new ArrayList<Uri>();
+        for (int i = 0; i < listAllImages.size(); i++) {
+            if (((CImage) listAllImages.get(i)).isChecked()) {
+                File file = new File(( (CImage)listAllImages.get(i)).getImageUri());
+                Uri uri = Uri.fromFile(file);
+
+                files.add(uri);
+            }
+        }
+        return files;
+    }
+
     public void unSelectAllImages() {
         for (int i = 0; i < listAllImages.size(); i++) {
             ((CImage) listAllImages.get(i)).setChecked(false);
