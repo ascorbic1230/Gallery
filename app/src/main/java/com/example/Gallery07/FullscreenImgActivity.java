@@ -2,6 +2,8 @@ package com.example.Gallery07;
 
 import static com.example.Gallery07.Utils.copyFile;
 import static com.example.Gallery07.Utils.deleteImagePerma;
+import static com.example.Gallery07.Utils.galleryPath;
+import static com.example.Gallery07.Utils.mContext;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,6 +11,7 @@ import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -28,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.bumptech.glide.util.Util;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -117,6 +121,7 @@ public class FullscreenImgActivity extends AppCompatActivity {
         File directory = new File(path);
         File[] files = directory.listFiles();
         ArrayList<String> listFolderNames = new ArrayList<String>();
+        listFolderNames.add("All Images");
         for (int i = 0; i < files.length; i++) {
             listFolderNames.add(files[i].getName());
         }
@@ -126,7 +131,10 @@ public class FullscreenImgActivity extends AppCompatActivity {
         formListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                copyFile(curPath, FullscreenImgActivity.this.getFilesDir().getAbsolutePath() + File.separator + listFolderNames.get(position));
+                if (position == 0)
+                    copyFile(curPath, galleryPath);
+                else
+                    copyFile(curPath, FullscreenImgActivity.this.getFilesDir().getAbsolutePath() + File.separator + listFolderNames.get(position));
                 deleteImagePerma(curPath);
                 alertDialog.cancel();
                 onBackPressed();

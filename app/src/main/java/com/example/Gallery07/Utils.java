@@ -3,9 +3,13 @@ package com.example.Gallery07;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,7 +28,7 @@ public final class Utils {
     public static int photoNumber = 0;
     public static String trashFolder = "Trash";
     public static String defaultFolder = "Camera";
-    public static final String galleryPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "DCIM" + File.separator + "Camera";
+    public static final String galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + "Camera";
     public static Context mContext;
     public static Fragment1 utils_fragment1;
 
@@ -33,6 +37,7 @@ public final class Utils {
     }
 
     public static void copyFile(String srcPath, String desPath) {
+
         InputStream in = null;
         OutputStream out = null;
         try {
@@ -42,29 +47,40 @@ public final class Utils {
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-
+            String filename = desPath + File.separator + createFileName();
             in = new FileInputStream(srcPath);
-            out = new FileOutputStream(desPath + File.separator + createFileName());
-
+            out = new FileOutputStream(filename);
             byte[] buffer = new byte[1024];
             int read;
             while ((read = in.read(buffer)) != -1) {
                 out.write(buffer, 0, read);
             }
             in.close();
-            in = null;
 
             // write the output file
             out.flush();
             out.close();
-            out = null;
-
+            if (desPath == galleryPath) {
+                scanGalleryFile(Utils.utils_fragment1.imagesManager, filename);
+            }
 
         } catch (FileNotFoundException fnfe1) {
             Log.e("tag", fnfe1.getMessage());
         } catch (Exception e) {
             Log.e("tag", e.getMessage());
         }
+    }
+
+    public static void scanGalleryFile(ImagesManager imgManager, String filename) {
+        MediaScannerConnection.scanFile(mContext, new String[]{filename}, null, new MediaScannerConnection.OnScanCompletedListener() {
+            /*
+             *   (non-Javadoc)
+             * @see android.media.MediaScannerConnection.OnScanCompletedListener#onScanCompleted(java.lang.String, android.net.Uri)
+             */
+            public void onScanCompleted(String path, Uri uri) {
+                Toast.makeText(mContext, "done", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public static String createFileName() {
@@ -113,4 +129,5 @@ public final class Utils {
         }
         c.close();
     }
+
 }

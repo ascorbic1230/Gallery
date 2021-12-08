@@ -5,6 +5,7 @@ import static com.example.Gallery07.Utils.defaultFolder;
 import static com.example.Gallery07.Utils.deleteImage;
 import static com.example.Gallery07.Utils.galleryPath;
 import static com.example.Gallery07.Utils.mContext;
+import static com.example.Gallery07.Utils.scanGalleryFile;
 
 import android.content.ClipData;
 import android.content.Intent;
@@ -41,7 +42,7 @@ import java.util.Locale;
 
 public class ImagesManager {
     private RecyclerView recyclerView;
-    private PhotoViewAdapter myRecyclerViewAdapter;
+    public PhotoViewAdapter myRecyclerViewAdapter;
     private String folderPath;  //Thu muc rieng cua app
     private List listAllImages = new ArrayList<CImage>();    //Luu list path dan toi file
 
@@ -144,16 +145,10 @@ public class ImagesManager {
             out.flush();
             out.close();
             if (folderPath == galleryPath) {
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                File f = new File(file.getAbsolutePath());
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                mContext.sendBroadcast(mediaScanIntent);
+                scanGalleryFile(ImagesManager.this, file.getAbsolutePath());
             }
             listAllImages.add(1, new CImage(file.getAbsolutePath(), dateTime, 1));
             myRecyclerViewAdapter.setData(listAllImages, recyclerView);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
