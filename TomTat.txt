@@ -14,3 +14,9 @@ Thêm tính năng Folder, bao gồm:
 - Di chuyển ảnh từ Folder này sang Folder khác
 Sửa lỗi load Image từ ClipBoard không được
 Vẫn còn lỗi: - Xóa ảnh trong Gallery gốc của máy không được
+v1.6.4
+Sửa giao diện, fix bug
+v1.6.5
+Fix duplicate ảnh khi move
+v.1.6.6
+Fix duplicate khi out app vào lại

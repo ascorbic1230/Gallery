@@ -1,5 +1,7 @@
 package com.example.Gallery07;
 
+import static com.example.Gallery07.Utils.utils_fragment1;
+
 import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
@@ -19,13 +21,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 
-import java.util.ArrayList;
 import java.util.List;
+import static com.example.Gallery07.Utils.mContext;
 
 public class PhotoViewAdapter extends RecyclerView.Adapter {
     private List listImgPaths;
-    private List MonthYearGroup;
-    private Context mContext;
     private RecyclerView parentLayout;
     private boolean isItemClickable = false;
 
@@ -34,18 +34,14 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void setmContext(Context mContext) {
-        this.mContext = mContext;
-    }
 
-    public void setData(List listImgPaths, ArrayList<String> MonthYearGroup, RecyclerView parent) {
+
+    public void setData(List listImgPaths, RecyclerView parent) {
         this.listImgPaths = listImgPaths;
-        this.MonthYearGroup = MonthYearGroup;
         this.parentLayout = parent;
         notifyDataSetChanged();
     }
 
-    // inflates the cell layout from xml when needed
     @Override
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,41 +66,48 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int tmp = position;
         CImage item = (CImage) listImgPaths.get(position);
         if (item.getType() == 0) {
             TextViewHolder textViewHolder = (TextViewHolder) holder;
-            textViewHolder.textView.setText("Tháng " + item.getMonth() + ", năm " + item.getYear());
+            textViewHolder.textView.setText(item.getDay() + " Tháng " + item.getMonth());
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.setFullSpan(true);
             holder.itemView.setLayoutParams(layoutParams);
         } else {
             PhotoViewHolder photoViewHolder = (PhotoViewHolder) holder;
-            String curPath = ((CImage) listImgPaths.get(position)).getImageUri();
-            Log.i("curpath", curPath);
-          
+            String curPath = ((CImage) listImgPaths.get(tmp)).getImageUri();
+
             ObjectKey obj = new ObjectKey(System.currentTimeMillis());
-          
+
             Glide.with(mContext)
                     .load(curPath)
                     .apply(new RequestOptions().centerCrop())
                     .signature(obj)
                     .into(photoViewHolder.imgPhoto);
-            if (isItemClickable)
-                photoViewHolder.setClickable(true);
-            else
-                photoViewHolder.setClickable(false);
-            photoViewHolder.imgPhoto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (photoViewHolder.isClickable()) {
-                        photoViewHolder.toggleChecked();
-                    } else {
+
+            if (isItemClickable) {
+                ((PhotoViewHolder) holder).imgCheckBox.setVisibility(View.VISIBLE);
+                ((PhotoViewHolder) holder).imgCheckBox.setChecked(item.isChecked());
+                ((PhotoViewHolder) holder).imgCheckBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        item.setChecked(((PhotoViewHolder) holder).imgCheckBox.isChecked());
+                        utils_fragment1.changeTitleContextualActionBar();
+                    }
+                });
+            } else {
+                ((PhotoViewHolder) holder).imgCheckBox.setChecked(false);
+                ((PhotoViewHolder) holder).imgCheckBox.setVisibility(View.GONE);
+                ((PhotoViewHolder) holder).imgPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         Intent intent = new Intent(mContext, FullscreenImgActivity.class);
                         intent.putExtra("curPath", curPath);
                         ((MainActivity) mContext).startActivity(intent);
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -135,14 +138,11 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
             super(itemView);
             imgPhoto = itemView.findViewById(R.id.imgPhoto);
             imgCheckBox = itemView.findViewById(R.id.imgCheckBox);
-            imgCheckBox.setVisibility(View.INVISIBLE);
         }
-
-        ;
 
         public void setClickable(boolean val) {
             clickable = val;
-            if (val == true) {
+            if (val) {
                 imgCheckBox.setChecked(false);
                 imgCheckBox.setVisibility(View.VISIBLE);
             } else
@@ -153,16 +153,8 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
             return clickable;
         }
 
-        public void toggleChecked() {
-            if (imgCheckBox.isChecked())
-                imgCheckBox.setChecked(false);
-            else
-                imgCheckBox.setChecked(true);
-        }
-
-
-        public boolean isChecked() {
-            return imgCheckBox.isChecked();
+        public void toggleChecked(boolean isChecked) {
+            imgCheckBox.setChecked(isChecked);
         }
     }
 }

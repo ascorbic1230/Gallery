@@ -15,8 +15,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,37 +39,37 @@ public class Fragment2 extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment2, container, false);
-        folderList = new ArrayList<Folder>();
+        folderList = new ArrayList<CFolder>();
         topAppBar2 = (MaterialToolbar) view.findViewById(R.id.topAppBar2);
         folderGridView = (GridView) view.findViewById(R.id.folderGridView);
         String path = getActivity().getFilesDir().getAbsolutePath();
         File directory = new File(path);
         File[] files = directory.listFiles();
-        folderList.add(new Folder("All Images", R.drawable.ic_baseline_folder_24));
         for (int i = 0; i < files.length; i++) {
-            if (!files[i].getName().equals("All Images"))
-                folderList.add(new Folder(files[i].getName(), R.drawable.ic_baseline_folder_24));
+            folderList.add(new CFolder(files[i].getName(), R.drawable.ic_baseline_folder_24));
         }
-        folderViewAdapter = new FolderViewAdapter(getActivity(), R.layout.gridview_item, folderList);
+        folderViewAdapter = new FolderViewAdapter(R.layout.gridview_item, folderList);
         folderGridView.setAdapter(folderViewAdapter);
         folderGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Fragment1 fragment1 = new Fragment1();
                 Bundle arguments = new Bundle();
-                arguments.putString("foldername", ((Folder) folderList.get(position)).getFolderName());
+                arguments.putString("foldername", ((CFolder) folderList.get(position)).getFolderName());
                 fragment1.setArguments(arguments);
                 assert getFragmentManager() != null;
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
-                trans.replace(R.id.emptyLayoutId, fragment1);
+                trans.replace(R.id.emptyLayoutId, fragment1, "newfragment");
                 trans.add(R.id.emptyLayoutId, new FragmentBackButton());
                 trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 trans.addToBackStack(null);
                 trans.commit();
+/*              getFragmentManager().executePendingTransactions();*/
             }
         });
         topAppBar2.getMenu().findItem(R.id.menu2_folder_delete_cancel).setVisible(false);
+        topAppBar2.getMenu().findItem(R.id.menu2_folder_setting).setVisible(false);
         topAppBar2.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -104,9 +102,8 @@ public class Fragment2 extends Fragment {
                             File myDir = new File(folderPath);
                             if (!myDir.exists() && !myDir.isDirectory())
                                 myDir.mkdirs();
-                            folderList.add(new Folder(form, R.drawable.ic_baseline_folder_24));
+                            folderList.add(new CFolder(form, R.drawable.ic_baseline_folder_24));
                             folderViewAdapter.setFolderList(folderList);
-                            Toast.makeText(getActivity(), "Create folder " + folderPath, Toast.LENGTH_SHORT).show();
                             formEditText.setText("");
                             alertDialog.cancel();
                         }
