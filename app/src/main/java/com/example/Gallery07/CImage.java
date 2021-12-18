@@ -1,9 +1,4 @@
 package com.example.Gallery07;
-
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.lang.Integer;
 import java.lang.String;
 
 public class CImage {
@@ -43,8 +38,11 @@ public class CImage {
     }
 
     public String getDateByMonthAndYear() {
-        Log.i("Result is", date.substring(0, 6));
-        return date.substring(0, 6);
+        return date.substring(0, 8);
+    }
+
+    public String getDay() {
+        return this.date.substring(6, 8);
     }
 
     public String getMonth() {
@@ -52,7 +50,7 @@ public class CImage {
     }
 
     public String getYear() {
-        return this.date.substring(0, 4);
+        return this.date.substring(2, 4);
     }
 }
 

@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_launcher_background"></ImageView>
+        android:src="@drawable/background"></ImageView>
 
     <ImageButton
         android:id="@+id/folderImageButton"

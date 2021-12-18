@@ -1,12 +1,11 @@
 package com.example.Gallery07;
 
-import android.widget.ImageView;
 
-public class Folder {
+public class CFolder {
     private String folderName;
     private int folderImage;
 
-    public Folder(String folderName, int folderImage) {
+    public CFolder(String folderName, int folderImage) {
         this.folderName = folderName;
         this.folderImage = folderImage;
     }

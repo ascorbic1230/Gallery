@@ -13,23 +13,17 @@
         android:id="@+id/imgPhoto"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:scaleType="centerCrop">
+        android:scaleType="centerCrop" />
 
-    </ImageView>
 
     <CheckBox
         android:id="@+id/imgCheckBox"
-        android:layout_width="20dp"
-        android:layout_height="21dp"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:button="@drawable/custom_checkbox"
-        android:clickable="false"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:textAlignment="gravity" />
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="start" />
 
 
 </androidx.cardview.widget.CardView>
