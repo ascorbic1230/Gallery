@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -72,6 +74,9 @@ public class ImagesManager {
         recyclerView.setAdapter(myRecyclerViewAdapter);
         myRecyclerViewAdapter.setData(listAllImages, this.recyclerView);
     }
+    public void refreshAdapter(){
+        myRecyclerViewAdapter.notifyDataSetChanged();
+    }
     public void saveImages(ClipData clipData) {
         int n = clipData.getItemCount();
         for (int i = 0; i < n; i++) {
@@ -100,7 +105,17 @@ public class ImagesManager {
         //Update RecyclerView
         myRecyclerViewAdapter.setData(listAllImages, this.recyclerView);
     }
-
+    public void deleteAllImages(){
+        for (int i = listAllImages.size() - 1; i >= 0; i--) {
+            try {
+                deleteImage(((CImage) listAllImages.get(i)).getImageUri());
+                listAllImages.remove(i);
+            } catch (Exception e) {
+                Log.e("Error", e.toString());
+            }
+        }
+        myRecyclerViewAdapter.setData(listAllImages, this.recyclerView);
+    }
 
     public void toggleCheckBox(boolean val) {
         if (!val) {
@@ -139,7 +154,7 @@ public class ImagesManager {
     }
 
 
-    private void saveImage(Bitmap bitmap, String name) {
+    public void saveImage(Bitmap bitmap, String name) {
         File myDir = new File(folderPath);
         if (!myDir.exists() && !myDir.isDirectory())
             myDir.mkdirs();
@@ -158,8 +173,21 @@ public class ImagesManager {
             out.close();
             if (folderPath == galleryPath) {
                 scanGalleryFile(file.getAbsolutePath());
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        String sortType="";
+                        String value = PreferenceManager.getDefaultSharedPreferences(mContext).getString("sortType", "");
+                        if(!value.equalsIgnoreCase(""))
+                        {
+                            sortType = value;
+                        }
+                        if (sortType!="")
+                            loadImages(sortType);
+                    }
+                }, 1000);   //1 seconds
             }
-            listAllImages.add(1, new CImage(file.getAbsolutePath(), dateTime, 1));
+            listAllImages.add(0,  new CImage(file.getAbsolutePath(), dateTime, 1));
             myRecyclerViewAdapter.setData(listAllImages, recyclerView);
         } catch (Exception e) {
             e.printStackTrace();

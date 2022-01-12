@@ -2,23 +2,29 @@ package com.example.Gallery07;
 
 
 import static com.example.Gallery07.Utils.defaultFolder;
+import static com.example.Gallery07.Utils.mContext;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -59,6 +65,16 @@ public class Fragment1 extends Fragment {
         if (arguments != null) {
             folderName = arguments.getString("foldername");
             topAppBar1.setTitle(folderName);
+            topAppBar1.getMenu().findItem(R.id.menu1_sortA).setVisible(false);
+            topAppBar1.getMenu().findItem(R.id.menu1_sortD).setVisible(false);
+            topAppBar1.getMenu().findItem(R.id.menu1_capture_image).setVisible(false);
+            topAppBar1.getMenu().findItem(R.id.menu1_change_theme).setVisible(false);
+            if (folderName=="Trash")
+            {
+                topAppBar1.getMenu().findItem(R.id.menu1_import_img).setVisible(false);
+                topAppBar1.getMenu().findItem(R.id.menu1_import_img_clipboard).setVisible(false);
+                topAppBar1.getMenu().findItem(R.id.menu1_clear_trash).setVisible(true);
+            }
         }
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         imagesManager = new ImagesManager(folderName);
@@ -68,16 +84,74 @@ public class Fragment1 extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int itemId = item.getItemId();
-                if (itemId == R.id.menu1_setting) {
-                    Intent intent = new Intent(getActivity(), Settings.class);
-                    startActivity(intent);
+                if (itemId == R.id.menu1_change_theme) {
+                    Boolean isDarkMode = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("darkMode", false);
+                    PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean("darkMode", !isDarkMode).apply();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            Intent mStartActivity = new Intent(mContext, MainActivity.class);
+                            int mPendingIntentId = 123456;
+                            PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+                            AlarmManager mgr = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+                            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500, mPendingIntent);
+                            System.exit(0);
+                        }
+                    }, 200);   //0.2 seconds
+                    /*Intent intent =new Intent(mContext, Settings.class);
+                    mContext.startActivity(intent);*/
+
                 } else if (itemId == R.id.menu1_import_img) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     someActivityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
-                } else if (itemId == R.id.menu1_import_img_clipboard) {
+                } else if (itemId==R.id.menu1_capture_image)
+                {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    //getting uri of the file
+                    someActivityResultLauncher2.launch(intent);
+                }
+                else if (itemId==R.id.menu1_clear_trash)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                    // Set a title for alert dialog
+                    builder.setTitle("Deleted images cant be recovered!");
+
+                    // Ask the final question
+                    builder.setMessage("Are you sure you want to delete all?");
+
+                    // Set the alert dialog yes button click listener
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do something when user clicked the Yes button
+                            imagesManager.deleteAllImages();
+                        }
+                    });
+
+                    // Set the alert dialog no button click listener
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do something when No button clicked
+                            Toast.makeText(mContext,
+                                    "No Clicked",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    // Display the alert dialog on interface
+                    dialog.setOnShowListener(arg0 -> {
+                        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mContext.getResources().getColor(R.color.blue));
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mContext.getResources().getColor(R.color.blue));
+                    });
+                    dialog.show();
+
+                }
+                else if (itemId == R.id.menu1_import_img_clipboard) {
                     ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                     try {
                         ClipData clip = clipboard.getPrimaryClip();
@@ -236,4 +310,25 @@ public class Fragment1 extends Fragment {
                 }
             });
 
+    ActivityResultLauncher<Intent> someActivityResultLauncher2 = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Toast.makeText(mContext, "success", Toast.LENGTH_SHORT).show();
+                        Intent data = result.getData();
+                        Bundle extras = data.getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        imagesManager.saveImage(imageBitmap, Utils.createFileName());
+                        Utils.scanGalleryFile(Utils.galleryPath);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                imagesManager.loadImages(sortType);
+                            }
+                        }, 1000);   //1 seconds
+                    }
+                }
+            });
 }

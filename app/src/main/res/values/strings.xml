@@ -7,9 +7,11 @@
     <string name="folders">Folders</string>
     <!--Fragment1-Items-->
     <string name="select_items">Select items</string>
-    <string name="setting">Setting</string>
+    <string name="change_theme">Change Theme</string>
+    <string name="capture_image">Capture Image</string>
     <string name="import_img">Import</string>
     <string name="import_img_clipboard">Import From Clipboard</string>
+    <string name="clear_trash">Clear Trash</string>
     <string name="slideshow">SlideShow</string>
     <!--Fragment2-Items-->
     <string name="folder_setting">Setting</string>

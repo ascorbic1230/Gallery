@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.screensliderpageractivity);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         Boolean isDarkMode = preferences.getBoolean("darkMode", false);
-
+        Log.i("isDarkmode", isDarkMode+"");
         if (isDarkMode)
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         else

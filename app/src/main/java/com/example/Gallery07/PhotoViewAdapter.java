@@ -131,7 +131,8 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
             return listImgPaths.size();
         else
             return 0;
-    }
+
+  }
 
     public class TextViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
