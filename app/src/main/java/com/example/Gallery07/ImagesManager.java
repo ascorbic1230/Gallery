@@ -72,7 +72,6 @@ public class ImagesManager {
         recyclerView.setAdapter(myRecyclerViewAdapter);
         myRecyclerViewAdapter.setData(listAllImages, this.recyclerView);
     }
-
     public void saveImages(ClipData clipData) {
         int n = clipData.getItemCount();
         for (int i = 0; i < n; i++) {
@@ -167,7 +166,7 @@ public class ImagesManager {
         }
     }
 
-    public void loadImages() {
+    public void loadImages(String type) {
         listAllImages.clear();
         File myDir = new File(folderPath);
         if (!myDir.exists() && !myDir.isDirectory())
@@ -177,7 +176,7 @@ public class ImagesManager {
             return;
 
         if (folderPath.equals(galleryPath))
-            loadImagesFromPhoneGallery();
+            loadImagesFromPhoneGallery(type);
         else {
             for (int i = 0; i < files.length; i++) {
                 String dateTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date(new File(folderPath + File.separator + files[i].getName()).lastModified()));
@@ -188,10 +187,10 @@ public class ImagesManager {
         myRecyclerViewAdapter.setData(listAllImages, recyclerView);
     }
 
-    private void loadImagesFromPhoneGallery() {
+    private void loadImagesFromPhoneGallery(String type) {
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATE_MODIFIED};
-        Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED + " DESC");
+        Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED + type);
         int col_idx_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         int col_idx_date = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED);
         String format = "yyyyMMddHHmmss";
@@ -211,7 +210,6 @@ public class ImagesManager {
             listAllImages.add(new CImage(path, dateTime, 1));
         }
     }
-
 
     public void importImgByUrl(String url, ProgressBar progressBar) throws URISyntaxException {
         progressBar.setVisibility(View.VISIBLE);

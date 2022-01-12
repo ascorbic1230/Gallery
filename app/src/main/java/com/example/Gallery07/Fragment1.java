@@ -8,6 +8,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -45,6 +47,7 @@ public class Fragment1 extends Fragment {
     private ImagesManager imagesManager;
     private static ActionMode actionMode;
     private String folderName = defaultFolder;
+    private String sortType = " DESC";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class Fragment1 extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         imagesManager = new ImagesManager(folderName);
         imagesManager.setRecyclerView(view.findViewById(R.id.myRecyclerView));
-        imagesManager.loadImages();
+        imagesManager.loadImages(" DESC");
         topAppBar1.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -99,6 +102,22 @@ public class Fragment1 extends Fragment {
                     actionMode.setTitle("Select items");
                     imagesManager.toggleCheckBox(true);
                 }
+                else if (itemId == R.id.menu1_sortA) {
+                    sortType = " ASC";
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("sortType",sortType);
+                    editor.apply();
+                    imagesManager.loadImages(sortType);
+                }
+                else if (itemId == R.id.menu1_sortD) {
+                    sortType = " DESC";
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("sortType",sortType);
+                    editor.apply();
+                    imagesManager.loadImages(sortType);
+                }
                 return true;
             }
         });
@@ -108,9 +127,22 @@ public class Fragment1 extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        imagesManager.loadImages();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String value = preferences.getString("sortType", "");
+        if(!value.equalsIgnoreCase(""))
+        {
+            sortType = value;
+        }
+        imagesManager.loadImages(sortType);
     }
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("sortType",sortType);
+        editor.apply();
+    }
     private final ActionMode.Callback mCallback = new ActionMode.Callback() {
 
         @Override
@@ -194,7 +226,7 @@ public class Fragment1 extends Fragment {
                             if (data.getClipData() != null) {
                                 ClipData clipData = data.getClipData();
                                 imagesManager.saveImages(clipData);
-
+                                imagesManager.loadImages(sortType);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

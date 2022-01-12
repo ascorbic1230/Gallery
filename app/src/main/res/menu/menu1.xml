@@ -26,4 +26,12 @@
         android:title="@string/slideshow"
         android:id="@+id/menu1_slideshow"
         app:showAsAction="never" />
+    <item
+        android:title="Sort Ascending"
+        android:id="@+id/menu1_sortA"
+        app:showAsAction="never" />
+    <item
+        android:title="Sort Descending"
+        android:id="@+id/menu1_sortD"
+        app:showAsAction="never" />
 </menu>
