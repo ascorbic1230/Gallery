@@ -191,21 +191,21 @@ public class ImagesManager {
     private void loadImagesFromPhoneGallery() {
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATE_ADDED};
-        Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+        Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_TAKEN + " DESC");
         int col_idx_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         int col_idx_date = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED);
         String format = "yyyyMMddHHmmss";
         SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.ENGLISH);
         while (cursor.moveToNext()) {
             String path = cursor.getString(col_idx_data);
-            Log.i("AbsolutePath: ", path);
             String date = cursor.getString(col_idx_date);
             //https://stackoverflow.com/questions/30106784/change-androids-media-date-taken-format
             // https://stackoverflow.com/questions/535004/unix-epoch-time-to-java-date-object
             String dateTime = formatter.format(new Date(Long.parseLong(date) * 1000));
+            Log.d("hello",dateTime);
             if (listAllImages.size() == 0) {
                 listAllImages.add(new CImage("", dateTime, 0));
-            } else if (!dateTime.substring(0, 8).equals(((CImage) listAllImages.get(listAllImages.size() - 1)).getDateByMonthAndYear())) {
+            } else if (!dateTime.substring(0, 6).equals(((CImage) listAllImages.get(listAllImages.size() - 1)).getDateByMonthAndYear())) {
                 listAllImages.add(new CImage("", dateTime, 0));
             }
             listAllImages.add(new CImage(path, dateTime, 1));
