@@ -190,10 +190,10 @@ public class ImagesManager {
 
     private void loadImagesFromPhoneGallery() {
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATE_ADDED};
-        Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_TAKEN + " DESC");
+        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATE_MODIFIED};
+        Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED + " DESC");
         int col_idx_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        int col_idx_date = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED);
+        int col_idx_date = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED);
         String format = "yyyyMMddHHmmss";
         SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.ENGLISH);
         while (cursor.moveToNext()) {
