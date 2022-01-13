@@ -87,17 +87,19 @@ public class Fragment1 extends Fragment {
                 if (itemId == R.id.menu1_change_theme) {
                     Boolean isDarkMode = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("darkMode", false);
                     PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean("darkMode", !isDarkMode).apply();
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            Intent mStartActivity = new Intent(mContext, MainActivity.class);
-                            int mPendingIntentId = 123456;
-                            PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-                            AlarmManager mgr = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
-                            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500, mPendingIntent);
-                            System.exit(0);
-                        }
-                    }, 200);   //0.2 seconds
+                    getActivity().finish();
+                    startActivity(getActivity().getIntent());
+//                    Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        public void run() {
+//                            Intent mStartActivity = new Intent(mContext, MainActivity.class);
+//                            int mPendingIntentId = 123456;
+//                            PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+//                            AlarmManager mgr = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+//                            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500, mPendingIntent);
+//                            System.exit(0);
+//                        }
+//                    }, 200);   //0.2 seconds
                     /*Intent intent =new Intent(mContext, Settings.class);
                     mContext.startActivity(intent);*/
 
