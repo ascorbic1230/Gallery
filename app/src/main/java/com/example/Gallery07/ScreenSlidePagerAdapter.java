@@ -56,7 +56,6 @@ public class ScreenSlidePagerAdapter extends PagerAdapter {
             Glide.with(context)
                     .load(((CImage)images.get(position)).getImageUri())
                     .apply(RequestOptions.placeholderOf(R.drawable.background))
-                    .override(500, 500)
                     .signature(obj)
                     .into(imageView);
             // Adding the View
