@@ -1,7 +1,8 @@
 package com.example.Gallery07;
+import java.io.Serializable;
 import java.lang.String;
 
-public class CImage {
+public class CImage implements Serializable {
     private String imageUri;
     private boolean isChecked = false;
     private String date;
@@ -38,7 +39,7 @@ public class CImage {
     }
 
     public String getDateByMonthAndYear() {
-        return date.substring(0, 8);
+        return date.substring(0, 6);
     }
 
     public String getDay() {
@@ -50,7 +51,7 @@ public class CImage {
     }
 
     public String getYear() {
-        return this.date.substring(2, 4);
+        return this.date.substring(0, 4);
     }
 }
 

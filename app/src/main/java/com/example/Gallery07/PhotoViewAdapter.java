@@ -21,11 +21,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import static com.example.Gallery07.Utils.mContext;
 
 public class PhotoViewAdapter extends RecyclerView.Adapter {
-    private List listImgPaths;
+    private List<CImage> listImgPaths;
     private RecyclerView parentLayout;
     private boolean isItemClickable = false;
 
@@ -70,7 +72,7 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
         CImage item = (CImage) listImgPaths.get(position);
         if (item.getType() == 0) {
             TextViewHolder textViewHolder = (TextViewHolder) holder;
-            textViewHolder.textView.setText(item.getDay() + " Tháng " + item.getMonth());
+            textViewHolder.textView.setText(" Tháng " + item.getMonth() + " Năm " + item.getYear());
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.setFullSpan(true);
             holder.itemView.setLayoutParams(layoutParams);
@@ -103,7 +105,18 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, FullscreenImgActivity.class);
-                        intent.putExtra("curPath", curPath);
+                        int newCurPos = 0;
+                        List newList = new ArrayList();
+                        for (int i = 0 ; i < listImgPaths.size();i++) {
+                            if (((CImage)listImgPaths.get(i)).getType() != 0) {
+                                newList.add(listImgPaths.get(i));
+                            }
+                            if (position == i) {
+                                newCurPos = newList.size() - 1;
+                            }
+                        }
+                        intent.putExtra("curPos", newCurPos);
+                        intent.putExtra( "images", (Serializable) newList);
                         ((MainActivity) mContext).startActivity(intent);
                     }
                 });
@@ -118,7 +131,8 @@ public class PhotoViewAdapter extends RecyclerView.Adapter {
             return listImgPaths.size();
         else
             return 0;
-    }
+
+  }
 
     public class TextViewHolder extends RecyclerView.ViewHolder {
         TextView textView;

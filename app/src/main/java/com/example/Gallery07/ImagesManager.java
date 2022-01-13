@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -72,7 +74,9 @@ public class ImagesManager {
         recyclerView.setAdapter(myRecyclerViewAdapter);
         myRecyclerViewAdapter.setData(listAllImages, this.recyclerView);
     }
-
+    public void refreshAdapter(){
+        myRecyclerViewAdapter.notifyDataSetChanged();
+    }
     public void saveImages(ClipData clipData) {
         int n = clipData.getItemCount();
         for (int i = 0; i < n; i++) {
@@ -101,7 +105,17 @@ public class ImagesManager {
         //Update RecyclerView
         myRecyclerViewAdapter.setData(listAllImages, this.recyclerView);
     }
-
+    public void deleteAllImages(){
+        for (int i = listAllImages.size() - 1; i >= 0; i--) {
+            try {
+                deleteImage(((CImage) listAllImages.get(i)).getImageUri());
+                listAllImages.remove(i);
+            } catch (Exception e) {
+                Log.e("Error", e.toString());
+            }
+        }
+        myRecyclerViewAdapter.setData(listAllImages, this.recyclerView);
+    }
 
     public void toggleCheckBox(boolean val) {
         if (!val) {
@@ -140,7 +154,7 @@ public class ImagesManager {
     }
 
 
-    private void saveImage(Bitmap bitmap, String name) {
+    public void saveImage(Bitmap bitmap, String name) {
         File myDir = new File(folderPath);
         if (!myDir.exists() && !myDir.isDirectory())
             myDir.mkdirs();
@@ -159,15 +173,28 @@ public class ImagesManager {
             out.close();
             if (folderPath == galleryPath) {
                 scanGalleryFile(file.getAbsolutePath());
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        String sortType="";
+                        String value = PreferenceManager.getDefaultSharedPreferences(mContext).getString("sortType", "");
+                        if(!value.equalsIgnoreCase(""))
+                        {
+                            sortType = value;
+                        }
+                        if (sortType!="")
+                            loadImages(sortType);
+                    }
+                }, 1000);   //1 seconds
             }
-            listAllImages.add(1, new CImage(file.getAbsolutePath(), dateTime, 1));
+            listAllImages.add(0,  new CImage(file.getAbsolutePath(), dateTime, 1));
             myRecyclerViewAdapter.setData(listAllImages, recyclerView);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void loadImages() {
+    public void loadImages(String type) {
         listAllImages.clear();
         File myDir = new File(folderPath);
         if (!myDir.exists() && !myDir.isDirectory())
@@ -177,7 +204,7 @@ public class ImagesManager {
             return;
 
         if (folderPath.equals(galleryPath))
-            loadImagesFromPhoneGallery();
+            loadImagesFromPhoneGallery(type);
         else {
             for (int i = 0; i < files.length; i++) {
                 String dateTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date(new File(folderPath + File.separator + files[i].getName()).lastModified()));
@@ -188,30 +215,29 @@ public class ImagesManager {
         myRecyclerViewAdapter.setData(listAllImages, recyclerView);
     }
 
-    private void loadImagesFromPhoneGallery() {
+    private void loadImagesFromPhoneGallery(String type) {
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATE_ADDED};
-        Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATE_MODIFIED};
+        Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED + type);
         int col_idx_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        int col_idx_date = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED);
+        int col_idx_date = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED);
         String format = "yyyyMMddHHmmss";
         SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.ENGLISH);
         while (cursor.moveToNext()) {
             String path = cursor.getString(col_idx_data);
-            Log.i("AbsolutePath: ", path);
             String date = cursor.getString(col_idx_date);
             //https://stackoverflow.com/questions/30106784/change-androids-media-date-taken-format
             // https://stackoverflow.com/questions/535004/unix-epoch-time-to-java-date-object
             String dateTime = formatter.format(new Date(Long.parseLong(date) * 1000));
+            Log.d("hello",dateTime);
             if (listAllImages.size() == 0) {
                 listAllImages.add(new CImage("", dateTime, 0));
-            } else if (!dateTime.substring(0, 8).equals(((CImage) listAllImages.get(listAllImages.size() - 1)).getDateByMonthAndYear())) {
+            } else if (!dateTime.substring(0, 6).equals(((CImage) listAllImages.get(listAllImages.size() - 1)).getDateByMonthAndYear())) {
                 listAllImages.add(new CImage("", dateTime, 0));
             }
             listAllImages.add(new CImage(path, dateTime, 1));
         }
     }
-
 
     public void importImgByUrl(String url, ProgressBar progressBar) throws URISyntaxException {
         progressBar.setVisibility(View.VISIBLE);

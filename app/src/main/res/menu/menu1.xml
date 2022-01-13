@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <item
+        android:title="@string/clear_trash"
+        android:id="@+id/menu1_clear_trash"
+        android:visible="false"
+        app:showAsAction= "never" />
     <item
         android:title="@string/select_items"
         android:id="@+id/menu1_select_items"
         app:showAsAction="never" />
 
     <item
-        android:title="@string/setting"
-        android:id="@+id/menu1_setting"
+        android:title="@string/change_theme"
+        android:id="@+id/menu1_change_theme"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/capture_image"
+        android:id="@+id/menu1_capture_image"
         app:showAsAction="never" />
 
     <item
@@ -25,5 +34,13 @@
     <item
         android:title="@string/slideshow"
         android:id="@+id/menu1_slideshow"
+        app:showAsAction="never" />
+    <item
+        android:title="Sort Ascending"
+        android:id="@+id/menu1_sortA"
+        app:showAsAction="never" />
+    <item
+        android:title="Sort Descending"
+        android:id="@+id/menu1_sortD"
         app:showAsAction="never" />
 </menu>

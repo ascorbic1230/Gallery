@@ -16,7 +16,8 @@ public class PermissionActivity extends Activity {
     private static final int PERMISSION_CODE = 101;
     String[] PERMISSIONS = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
     };
 
     @Override
